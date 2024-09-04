@@ -1,6 +1,6 @@
 ﻿namespace RepositoryContracts;
 
-public interface Post
+public interface IPostRepository
 {
     
 }
