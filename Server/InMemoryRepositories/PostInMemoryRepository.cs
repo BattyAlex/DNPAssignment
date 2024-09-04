@@ -5,50 +5,50 @@ namespace InMemoryRepositories;
 
 public class PostInMemoryRepository : IPostRepository
 {
-    private List<Post> posts { get; set; } = new List<Post>();
+    private List<Post> Posts { get; set; } = new List<Post>();
     public Task<Post> AddPostAsync(Post post)
     {
-        post.ID = posts.Any() ? posts.Max(p => p.ID) + 1 : 1;
-        posts.Add(post);
+        post.ID = Posts.Any() ? Posts.Max(p => p.ID) + 1 : 1;
+        Posts.Add(post);
         return Task.FromResult(post);
     }
 
     public Task UpdatePostAsync(Post post)
     {
-        Post ? postToUpdate = posts.FirstOrDefault(p => p.ID == post.ID);
+        Post ? postToUpdate = Posts.FirstOrDefault(p => p.ID == post.ID);
         if (postToUpdate is null)
         {
             throw new InvalidOperationException($"Post {post.ID} does not exist");
         }
 
-        posts.Remove(postToUpdate);
-        posts.Add(post);
+        Posts.Remove(postToUpdate);
+        Posts.Add(post);
         return Task.CompletedTask;
     }
 
-    public Task DeletePostAsync(int ID)
+    public Task DeletePostAsync(int id)
     {
-        Post? postToDelete = posts.FirstOrDefault(p => p.ID == ID);
+        Post? postToDelete = Posts.FirstOrDefault(p => p.ID == id);
         if (postToDelete is null)
         {
-           throw new InvalidOperationException($"Post {ID} does not exist"); 
+           throw new InvalidOperationException($"Post {id} does not exist"); 
         }
-        posts.Remove(postToDelete);
+        Posts.Remove(postToDelete);
         return Task.CompletedTask;
     }
 
-    public Task<Post> GetSinglePostAsync(int ID)
+    public Task<Post> GetSinglePostAsync(int id)
     {
-        Post? postToGet = posts.FirstOrDefault(p => p.ID == ID);
+        Post? postToGet = Posts.FirstOrDefault(p => p.ID == id);
         if (postToGet is null)
         {
-           throw new InvalidOperationException($"Post {ID} does not exist");
+           throw new InvalidOperationException($"Post {id} does not exist");
         }
         return Task.FromResult(postToGet);
     }
 
     public IQueryable<Post> GetMultiplePosts()
     {
-       return posts.AsQueryable();
+       return Posts.AsQueryable();
     }
 }
