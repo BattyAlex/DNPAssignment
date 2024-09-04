@@ -1,6 +1,6 @@
 ﻿namespace RepositoryContracts;
 
-public interface IComment
+public interface ICommentRepository
 {
     
 }
