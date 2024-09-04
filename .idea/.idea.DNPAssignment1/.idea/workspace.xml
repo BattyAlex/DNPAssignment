@@ -8,8 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb3ae8f5-7561-40ed-8598-d04110368a6c" name="Changes" comment="See if this works">
+      <change afterPath="$PROJECT_DIR$/Server/RepositoryContracts/IComment.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNPAssignment1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNPAssignment1/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Entities/Post.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Post.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +31,9 @@
     &quot;accountId&quot;: &quot;8b04a197-eba9-4be2-bd35-40994d8f8146&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Entities/Comment.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
