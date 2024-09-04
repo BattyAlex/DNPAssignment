@@ -7,7 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb3ae8f5-7561-40ed-8598-d04110368a6c" name="Changes" comment="IUserRepository.cs" />
+    <list default="true" id="eb3ae8f5-7561-40ed-8598-d04110368a6c" name="Changes" comment="See if this works">
+      <change afterPath="$PROJECT_DIR$/Server/RepositoryContracts/IComment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DNPAssignment1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNPAssignment1/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,6 +31,9 @@
     &quot;accountId&quot;: &quot;8b04a197-eba9-4be2-bd35-40994d8f8146&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Entities/Comment.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -102,31 +108,7 @@
       <option name="project" value="LOCAL" />
       <updated>1725444168123</updated>
     </task>
-    <task id="LOCAL-00003" summary="Repository?">
-      <option name="closed" value="true" />
-      <created>1725446120195</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1725446120195</updated>
-    </task>
-    <task id="LOCAL-00004" summary="reference added">
-      <option name="closed" value="true" />
-      <created>1725446414727</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1725446414727</updated>
-    </task>
-    <task id="LOCAL-00005" summary="IUserRepository.cs">
-      <option name="closed" value="true" />
-      <created>1725446804482</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1725446804482</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -139,9 +121,6 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Trying again" />
     <MESSAGE value="See if this works" />
-    <MESSAGE value="Repository?" />
-    <MESSAGE value="reference added" />
-    <MESSAGE value="IUserRepository.cs" />
-    <option name="LAST_COMMIT_MESSAGE" value="IUserRepository.cs" />
+    <option name="LAST_COMMIT_MESSAGE" value="See if this works" />
   </component>
 </project>
