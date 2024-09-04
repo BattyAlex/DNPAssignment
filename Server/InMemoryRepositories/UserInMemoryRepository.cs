@@ -4,7 +4,7 @@ using RepositoryContracts;
 
 namespace InMemoryRepositories;
 
-public class UserInMemoryRepository
+public class UserInMemoryRepository : IUserRepository
 {
     private List<User> users{get;set;}
 
@@ -32,23 +32,23 @@ public class UserInMemoryRepository
         return Task.CompletedTask;
     }
 
-    public Task DeleteUserAsync(User user)
+    public Task DeleteUserAsync(int id)
     {
-        User? userToRemove = users.SingleOrDefault(u => u.ID == user.ID);
+        User? userToRemove = users.SingleOrDefault(u => u.ID == id);
         if (userToRemove is null)
         {
-            throw new InvalidOperationException($"User with ID '{user.ID}' not found");
+            throw new InvalidOperationException($"User with ID '{id}' not found");
         }
         users.Remove(userToRemove);
         return Task.CompletedTask;
     }
 
-    public Task<User> GetSingleUsersAsync(int id)
+    public Task<User> GetSingleUserAsync(int id)
     {
         User? userToGet = users.SingleOrDefault(u => u.ID == id);
         if (userToGet is null)
         {
-            throw new InvalidOperationException($"User with ID '{userToGet.ID}' not found");
+            throw new InvalidOperationException($"User with ID '{id}' not found");
         }
         return Task.FromResult(userToGet);
     }
