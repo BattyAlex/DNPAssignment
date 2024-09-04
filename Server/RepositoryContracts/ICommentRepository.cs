@@ -4,9 +4,9 @@ namespace RepositoryContracts;
 
 public interface ICommentRepository
 {
-    Task<Comment> AddAsync(Comment comment);
-    Task UpdateAsync(Comment comment);
-    Task DeleteAsync(Comment comment);
-    Task<Comment> GetSingleAsync(string id);
+    Task<Comment> AddComment(Comment comment);
+    Task UpdateCommentAsync(Comment comment);
+    Task DeleteCommentAsync(Comment comment);
+    Task<Comment> GetSingleCommentAsync(string id);
     IQueryable<Comment> GetAll();
 }
