@@ -2,5 +2,8 @@
 
 public class ViewHandler
 {
-    
+    public ViewHandler()
+    {
+        //will need views
+    }
 }
