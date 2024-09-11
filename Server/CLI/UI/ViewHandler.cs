@@ -12,7 +12,6 @@ public class ViewHandler
     public static string CREATEPOST = "createpost";
     public static string MANAGEPOST = "managepost";
     public static string LISTPOSTS = "listposts";
-    public static string SINGLEPOST = "singlepost";
     
     private IUserRepository userRep;
     private ICommentRepository commentRep;
@@ -70,9 +69,11 @@ public class ViewHandler
             case "listposts":
                 listPostView.Show();
                 break;
-            case "singlepost":
-                singlePostView.ShowPostById(2);
-                break;
+            
         }
+    }
+    public void ShowPost(int postId)
+    {
+       singlePostView.ShowPostById(postId);
     }
 }
