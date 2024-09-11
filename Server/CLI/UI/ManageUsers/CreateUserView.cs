@@ -13,14 +13,23 @@ public class CreateUserView
         _userRepository = userRepository;
     }
 
-    public void Show()
+    public void Start()
     {
         Console.WriteLine("Create New User");
         Console.WriteLine("Enter Username:");
-        string username = Console.ReadLine();
+        string? username = Console.ReadLine();
+        while (username is null)
+        {
+            Console.WriteLine("Username is required");
+            username = Console.ReadLine();
+        }
         Console.WriteLine("Enter Password:");
-        string password = Console.ReadLine();
-        
+        string? password = Console.ReadLine();
+        while (password is null)
+        {
+            Console.WriteLine("Password is required");
+            password = Console.ReadLine();
+        }
         User newUser = new User(password, username);
         _userRepository.AddUserAsync(newUser);
     }

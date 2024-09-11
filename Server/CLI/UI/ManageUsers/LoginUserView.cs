@@ -4,16 +4,22 @@ public class LoginUserView
 {
     public void Start()
     {
-        Console.WriteLine("1 - Create user \n2 - Login");
-        int? input = Console.Read();
-        if(input is null)
-            Console.WriteLine("Bad");
-        if (input == 1)
+        Console.WriteLine("Please enter Username");
+        string? username = Console.ReadLine();
+        while (username is null)
         {
-              //switch view
+            Console.WriteLine("Username is required");
+            username = Console.ReadLine();
         }
-        if (input == 2)
+        
+
+        Console.WriteLine("Please enter Password");
+        string? password = Console.ReadLine();
+        while (password is null)
         {
+            Console.WriteLine("Password is required");
+            password = Console.ReadLine();
         }
+        
     }
 }

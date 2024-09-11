@@ -24,5 +24,9 @@ public class ManageUsersView
             Console.WriteLine("You chose to log in.");
             viewHandler.ChangeView(ViewHandler.LOGIN);
         }
+        else if (input == 2)
+        {
+            viewHandler.ChangeView(ViewHandler.CREATEUSER);
+        }
     }
 }
