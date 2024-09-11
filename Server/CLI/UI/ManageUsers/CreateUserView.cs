@@ -13,7 +13,7 @@ public class CreateUserView
     
     public CreateUserView(IUserRepository userRepository, ViewHandler viewHandler, UserLoggedIn userLoggedIn)
     {
-        userRepository = userRepository;
+        this.userRepository = userRepository;
         this.viewHandler = viewHandler;
         this.userLoggedIn = userLoggedIn;
     }
