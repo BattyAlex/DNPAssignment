@@ -1,6 +1,7 @@
 ﻿using CLI.UI.ManagePosts;
 using Entities;
 using InMemoryRepositories;
+using RepositoryContracts;
 
 namespace CLI.UI.ManageUsers;
 
@@ -8,12 +9,12 @@ public class LoginUserView
 {
     private ViewHandler viewHandler;
     private UserLoggedIn userLoggedIn;
-    private UserInMemoryRepository userInMemoryRepository;
-    public LoginUserView(ViewHandler viewHandler, UserLoggedIn userLoggedIn, UserInMemoryRepository userInMemoryRepository)
+    private IUserRepository userRepository;
+    public LoginUserView(ViewHandler viewHandler, UserLoggedIn userLoggedIn, IUserRepository userRepository)
     {
         this.viewHandler = viewHandler;
         this.userLoggedIn = userLoggedIn;
-        this.userInMemoryRepository = userInMemoryRepository;
+        this.userRepository = userRepository;
     }
     public void Start()
     {
@@ -37,14 +38,14 @@ public class LoginUserView
             password = Console.ReadLine();
         }
         User userLoggingIn = new User(username, password);
-        userInMemoryRepository.AddUserAsync(userLoggingIn);
+        userRepository.AddUserAsync(userLoggingIn);
         userLoggedIn.Login(userLoggingIn);
         viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 
     private bool isUnique(string username)
     {
-        List<User> users = userInMemoryRepository.GetManyUsersAsync().ToList();
+        List<User> users = userRepository.GetManyUsersAsync().ToList();
         foreach (User user in users)
         {
             if (user.Name == username)

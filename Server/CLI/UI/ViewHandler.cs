@@ -34,7 +34,7 @@ public class ViewHandler
         this.postRep = postRep;
         userLoggedIn = new UserLoggedIn();
 
-        loginUserView = new LoginUserView(this, userLoggedIn);
+        loginUserView = new LoginUserView(this, userLoggedIn, userRep);
         manageUsersView = new ManageUsersView(this);
         createUserView = new CreateUserView(this.userRep, this, userLoggedIn);
         createPostView = new CreatePostView(this.postRep, this, userLoggedIn);
