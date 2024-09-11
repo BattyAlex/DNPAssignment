@@ -5,10 +5,9 @@ public class Post
     public int ID { get; set; }
     public string Title { get; set; }
     public string Content { get; set; }
-    public string UserID { get; set; }
-    public Post(int id, string title, string content, string userId)
+    public int UserID { get; set; }
+    public Post(string title, string content, int userId)
     {
-        ID = id;
         Title = title;
         Content = content;
         UserID = userId;

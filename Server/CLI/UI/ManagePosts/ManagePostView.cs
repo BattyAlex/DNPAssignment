@@ -20,7 +20,8 @@ public class ManagePostView
         }
         else if (input == 1)
         {
-            
+            Console.WriteLine("You chose to add a new post");
+            viewHandler.ChangeView(ViewHandler.CREATEPOST);
         }
         else if (input == 2)
         {

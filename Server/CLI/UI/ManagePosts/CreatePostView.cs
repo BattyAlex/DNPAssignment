@@ -1,4 +1,5 @@
-﻿using RepositoryContracts;
+﻿using Entities;
+using RepositoryContracts;
 
 namespace CLI.UI.ManagePosts;
 
@@ -22,9 +23,20 @@ public class CreatePostView
     {
         Console.WriteLine("Enter the title of the post:");
         string? title = Console.ReadLine();
-
+        while (title is null)
+        {
+            Console.WriteLine("title is required");
+            title = Console.ReadLine();
+        }
         Console.WriteLine("Enter the content of the post:");
         string? content = Console.ReadLine();
+        while (content is null)
+        {
+            Console.WriteLine("content is required");
+            content = Console.ReadLine();
+        }
+        Post post = new Post(title, content, 2);
+        postRepository.AddPostAsync(post);
     }
 
 }
