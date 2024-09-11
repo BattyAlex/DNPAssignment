@@ -35,7 +35,7 @@ public class CreatePostView
             Console.WriteLine("content is required");
             content = Console.ReadLine();
         }
-        Post post = new Post(title, content, 2);
+        Post post = new Post(title, content, 2); //gotta figure out how to add the userID
         postRepository.AddPostAsync(post);
     }
 
