@@ -7,12 +7,11 @@ namespace CLI.UI.ManagePosts;
 public class ListPostView
 {
     private ViewHandler viewHandler;
+    private readonly IPostRepository postRepository;
 
-    private readonly IPostRepository postRepository =
-        new PostInMemoryRepository();
-
-    public ListPostView(ViewHandler viewHandler)
+    public ListPostView(IPostRepository postRepository, ViewHandler viewHandler)
     {
+        this.postRepository = postRepository;
         this.viewHandler = viewHandler;
     }
 
@@ -26,17 +25,33 @@ public class ListPostView
             Console.WriteLine("No posts available.");
             return;
         }
-        
+
         foreach (var post in posts)
         {
             Console.WriteLine($"Post ID: {post.ID}");
             Console.WriteLine($"Title: {post.Title}");
             Console.WriteLine($"Body: {post.Content}\n");
-            Console.WriteLine(
-                "\n====================\n"); 
+            Console.WriteLine("\n====================\n");
         }
 
-        Console.WriteLine("Press any key to return to the menu.");
-        Console.ReadKey();
+        Console.WriteLine("Choose a post by typing the ID:");
+        string? input = Console.ReadLine();
+        int inp = 0;
+        try
+        {
+            inp = int.Parse(input);
+        }
+        catch (FormatException e)
+        {
+            Console.WriteLine("Please enter an integer.");
+        }
+
+        foreach (var post in posts)
+        {
+            if (post.ID == inp)
+            {
+                
+            }
+        }
     }
 }

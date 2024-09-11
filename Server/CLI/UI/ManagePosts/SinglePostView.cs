@@ -21,6 +21,7 @@ public class SinglePostView
         {
             Console.WriteLine("Title: {post.Title}", post.Title);
             Console.WriteLine("Content: {post.Content}", post.Content);
+            
         }
         else
         {

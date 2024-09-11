@@ -12,6 +12,7 @@ public class ViewHandler
     public static string CREATEPOST = "createpost";
     public static string MANAGEPOST = "managepost";
     public static string LISTPOSTS = "listposts";
+    public static string SINGLEPOST = "singlepost";
     
     private IUserRepository userRep;
     private ICommentRepository commentRep;
@@ -37,7 +38,7 @@ public class ViewHandler
         manageUsersView = new ManageUsersView(this);
         createUserView = new CreateUserView(this.userRep, this, userLoggedIn);
         createPostView = new CreatePostView(this.postRep, this, userLoggedIn);
-        listPostView = new ListPostView(this);
+        listPostView = new ListPostView(this.postRep,this);
         managePostView = new ManagePostView(this);
         singlePostView = new SinglePostView(this.postRep, this);
     }
@@ -68,6 +69,9 @@ public class ViewHandler
                 break;
             case "listposts":
                 listPostView.Show();
+                break;
+            case "singlepost":
+                singlePostView.ShowPostById(2);
                 break;
         }
     }
