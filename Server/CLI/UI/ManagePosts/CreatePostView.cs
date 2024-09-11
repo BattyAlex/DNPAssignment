@@ -26,6 +26,7 @@ public class CreatePostView
             post.Title = title;
             post.Content = content;
             post.UserID = userId;
+            
         }
         
 postRepository.AddPostAsync(post);  
