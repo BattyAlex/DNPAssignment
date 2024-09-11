@@ -7,7 +7,8 @@ public class CreatePostView
 {
     private readonly IPostRepository postRepository;
     private ViewHandler viewHandler;
-    
+    private Post posts;
+
     public CreatePostView(IPostRepository postRepository, ViewHandler viewHandler)
     {
         this.postRepository = postRepository;
@@ -19,16 +20,25 @@ public class CreatePostView
          public CreatePostView createPostView { get; set; }
     }
 
-    public void CreatePost(string title, string content, int userId)
+    public void CreatePost()
     {
-        var post = new Post(title, content, userId);
+        Console.WriteLine("Enter the title of the post:");
+        string? title = Console.ReadLine();
+        while (title is null)
         {
-            post.Title = title;
-            post.Content = content;
-            post.UserID = userId;
-            
+            Console.WriteLine("title is required");
+            title = Console.ReadLine();
         }
-        
-postRepository.AddPostAsync(post);  
+        Console.WriteLine("Enter the content of the post:");
+        string? content = Console.ReadLine();
+        while (content is null)
+        {
+            Console.WriteLine("content is required");
+            content = Console.ReadLine();
+        }
+        Post post = new Post(title, content, posts.UserID ); //gotta figure out how to add the userID
+        postRepository.AddPostAsync(post);
+        viewHandler.ChangeView(ViewHandler.LISTPOSTS);
     }
+
 }
