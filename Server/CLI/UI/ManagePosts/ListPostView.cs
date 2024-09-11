@@ -30,7 +30,6 @@ public class ListPostView
         {
             Console.WriteLine($"Post ID: {post.ID}");
             Console.WriteLine($"Title: {post.Title}");
-            Console.WriteLine($"Body: {post.Content}\n");
             Console.WriteLine("\n====================\n");
         }
 

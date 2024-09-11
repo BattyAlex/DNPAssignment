@@ -14,11 +14,13 @@ public class UserInMemoryRepository : IUserRepository
         User salomeea = new User("Salomeea", "salomeea1sVeryPretty");
         User sophie = new User("Sophie", "sophi3l00ksGoodINBlu");
         User alex = new User("Alex", "alexLooksn1ceWIthR4inb0wHair");
+        User kristy = new User("Kristy", "kristyMakesawesomeKittyn05ie5AndIsveryPrettyAndwILLHAVEtowriteAlotOThing5MUHAHA");
         users = new List<User>();
         AddUserAsync(alexa);
         AddUserAsync(salomeea);
         AddUserAsync(sophie);
         AddUserAsync(alex);
+        AddUserAsync(kristy);
     }
 
     public Task<User> AddUserAsync(User user)
