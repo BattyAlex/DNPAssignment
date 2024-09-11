@@ -8,6 +8,11 @@ public class UserInMemoryRepository : IUserRepository
 {
     private List<User> users{get;set;}
 
+    public UserInMemoryRepository()
+    {
+        users = new List<User>();
+    }
+
     public Task<User> AddUserAsync(User user)
     {
         user.ID = users.Any()
