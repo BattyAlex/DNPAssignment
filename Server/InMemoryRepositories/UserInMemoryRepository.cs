@@ -10,7 +10,12 @@ public class UserInMemoryRepository : IUserRepository
 
     public UserInMemoryRepository()
     {
-        users = new List<User>();
+        User alexa = new User("Alexa", "alexaHasSh1nyHair");
+        User salomeea = new User("Salomeea", "salomeea1sVeryPretty");
+        User sophie = new User("Sophie", "sophi3l00ksGoodINBlu");
+        User alex = new User("Alex", "alexLooksn1ceWIthR4inb0wHair");
+        users = new List<User>(){alex, salomeea, sophie, alexa};
+        
     }
 
     public Task<User> AddUserAsync(User user)
