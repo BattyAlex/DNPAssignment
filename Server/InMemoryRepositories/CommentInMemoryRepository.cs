@@ -6,6 +6,13 @@ namespace InMemoryRepositories;
 public class CommentInMemoryRepository: ICommentRepository
 {
     private List<Comment> comments { get; set; } = new List<Comment>();
+
+    public CommentInMemoryRepository()
+    {
+        Comment commentOnDogs1 = new Comment("Good to know!", 1, 1);
+        Comment commentOnDogs2 = new Comment("Oh no! Having no insulation must be woofful!", 4, 1);
+        Comment commentOnPuns = new Comment("Okay, that was a good one.", 3, 2);
+    }
     public Task<Comment> AddCommentAsync(Comment comment)
     {
         comment.Id = comments.Any()
