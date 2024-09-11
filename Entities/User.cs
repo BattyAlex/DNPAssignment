@@ -13,7 +13,7 @@ public class User
       Password = password;
    }
 
-   public User(string password, string name)
+   public User(string name, string password)
    {
       Password = password;
       Name = name;
