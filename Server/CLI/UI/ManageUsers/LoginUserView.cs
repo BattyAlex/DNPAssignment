@@ -1,14 +1,16 @@
 ﻿using CLI.UI.ManagePosts;
+using Entities;
 
 namespace CLI.UI.ManageUsers;
 
 public class LoginUserView
 {
     private ViewHandler viewHandler;
-
-    public LoginUserView(ViewHandler viewHandler)
+    private UserLoggedIn userLoggedIn;
+    public LoginUserView(ViewHandler viewHandler, UserLoggedIn userLoggedIn)
     {
         this.viewHandler = viewHandler;
+        this.userLoggedIn = userLoggedIn;
     }
     public void Start()
     {
@@ -27,6 +29,7 @@ public class LoginUserView
             Console.WriteLine("Password is required");
             password = Console.ReadLine();
         }
+        userLoggedIn.Login(new User(username, password));
         viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 }

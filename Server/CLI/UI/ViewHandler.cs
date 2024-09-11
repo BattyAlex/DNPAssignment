@@ -24,16 +24,19 @@ public class ViewHandler
     private ListPostView listPostView;
     private SinglePostView singlePostView;
     private ManagePostView managePostView;
+    
+    private UserLoggedIn userLoggedIn;
     public ViewHandler(IUserRepository userRep, ICommentRepository commentRep, IPostRepository postRep)
     {
         this.userRep = userRep;
         this.commentRep = commentRep;
         this.postRep = postRep;
+        userLoggedIn = new UserLoggedIn();
 
-        loginUserView = new LoginUserView(this);
+        loginUserView = new LoginUserView(this, userLoggedIn);
         manageUsersView = new ManageUsersView(this);
-        createUserView = new CreateUserView(this.userRep, this);
-        createPostView = new CreatePostView(this.postRep, this);
+        createUserView = new CreateUserView(this.userRep, this, userLoggedIn);
+        createPostView = new CreatePostView(this.postRep, this, userLoggedIn);
         listPostView = new ListPostView(this);
         managePostView = new ManagePostView(this);
         singlePostView = new SinglePostView(this.postRep, this);
