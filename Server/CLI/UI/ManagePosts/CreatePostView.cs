@@ -7,6 +7,7 @@ public class CreatePostView
 {
     private readonly IPostRepository postRepository;
     private ViewHandler viewHandler;
+    private Post posts;
 
     public CreatePostView(IPostRepository postRepository, ViewHandler viewHandler)
     {
@@ -35,7 +36,7 @@ public class CreatePostView
             Console.WriteLine("content is required");
             content = Console.ReadLine();
         }
-        Post post = new Post(title, content, 2); //gotta figure out how to add the userID
+        Post post = new Post(title, content, posts.UserID ); //gotta figure out how to add the userID
         postRepository.AddPostAsync(post);
     }
 
