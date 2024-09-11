@@ -34,6 +34,7 @@ public class CreateUserView
         }
         User newUser = new User(password, username);
         _userRepository.AddUserAsync(newUser);
+        viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 
     

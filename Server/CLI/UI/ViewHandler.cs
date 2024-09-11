@@ -10,6 +10,7 @@ public class ViewHandler
     public static string MANAGEUSERS = "manageusers";
     public static string CREATEUSER = "createuser";
     public static string CREATEPOST = "createpost";
+    public static string MANAGEPOST = "managepost";
     
     private IUserRepository userRep;
     private ICommentRepository commentRep;
@@ -57,6 +58,9 @@ public class ViewHandler
                 break;
             case "createpost":
                 createPostView.CreatePost();
+                break;
+            case "managepost":
+                managePostView.Start();
                 break;
         }
     }

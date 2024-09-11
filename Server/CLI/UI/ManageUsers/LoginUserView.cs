@@ -19,7 +19,6 @@ public class LoginUserView
             Console.WriteLine("Username is required");
             username = Console.ReadLine();
         }
-        
 
         Console.WriteLine("Please enter Password");
         string? password = Console.ReadLine();
@@ -28,6 +27,6 @@ public class LoginUserView
             Console.WriteLine("Password is required");
             password = Console.ReadLine();
         }
-        
+        viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 }
