@@ -25,7 +25,8 @@ public class ManagePostView
         }
         else if (input == 2)
         {
-            
+            Console.WriteLine("You chose to view existing posts");
+            viewHandler.ChangeView(ViewHandler.LISTPOSTS);
         }
         else
         {
