@@ -27,7 +27,7 @@ public class LoginUserView
         }
         while (isUnique(username))
         {
-            Console.WriteLine("This username already exists. Try again.");
+            Console.WriteLine("This username doesn't exists. Try again.");
             username = Console.ReadLine();
         }
         Console.WriteLine("Please enter Password");
@@ -35,6 +35,12 @@ public class LoginUserView
         while (password is null)
         {
             Console.WriteLine("Password is required");
+            password = Console.ReadLine();
+        }
+
+        while (!verify(username, password))
+        {
+            Console.WriteLine("This password does not match the username. Try again.");
             password = Console.ReadLine();
         }
         User userLoggingIn = new User(username, password);
@@ -55,5 +61,20 @@ public class LoginUserView
         }
 
         return true;
+    }
+
+    private bool verify(string username, string password)
+    {
+        List<User> users = userRepository.GetManyUsersAsync().ToList();
+        foreach (User user in users)
+        {
+            if (user.Name == username)
+            {
+                if(user.Password == password)
+                    return true;
+            }
+        }
+
+        return false;
     }
 }
