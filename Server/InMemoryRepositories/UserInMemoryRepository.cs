@@ -20,6 +20,7 @@ public class UserInMemoryRepository : IUserRepository
         AddUserAsync(salomeea);
         AddUserAsync(sophie);
         AddUserAsync(alex);
+        AddUserAsync(kristy);
     }
 
     public Task<User> AddUserAsync(User user)
