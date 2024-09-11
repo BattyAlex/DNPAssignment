@@ -27,6 +27,11 @@ public class CreateUserView
             Console.WriteLine("Username is required");
             username = Console.ReadLine();
         }
+        while (exists(username))
+        {
+            Console.WriteLine("This username already exists. Try again.");
+            username = Console.ReadLine();
+        }
         Console.WriteLine("Please choose a Password:");
         string? password = Console.ReadLine();
         while (password is null)
@@ -41,5 +46,18 @@ public class CreateUserView
         viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 
-    
+    private bool exists(string username)
+    {
+        List<User> users = userRepository.GetManyUsersAsync().ToList();
+        foreach (User user in users)
+        {
+            if (user.Name == username)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

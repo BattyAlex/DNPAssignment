@@ -25,7 +25,7 @@ public class LoginUserView
             Console.WriteLine("Username is required");
             username = Console.ReadLine();
         }
-        while (!isUnique(username))
+        while (isUnique(username))
         {
             Console.WriteLine("This username already exists. Try again.");
             username = Console.ReadLine();
