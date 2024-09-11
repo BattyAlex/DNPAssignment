@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using CLI.UI.ManagePosts;
+using Entities;
 using InMemoryRepositories;
 using RepositoryContracts;
 
@@ -7,23 +8,24 @@ namespace CLI.UI.ManageUsers;
 public class CreateUserView
 {
     private readonly IUserRepository _userRepository;
+    private ViewHandler viewHandler;
 
-    public CreateUserView(IUserRepository userRepository)
+    public CreateUserView(IUserRepository userRepository, ViewHandler viewHandler)
     {
         _userRepository = userRepository;
+        this.viewHandler = viewHandler;
     }
 
     public void Start()
     {
-        Console.WriteLine("Create New User");
-        Console.WriteLine("Enter Username:");
+        Console.WriteLine("Please choose a Username:");
         string? username = Console.ReadLine();
         while (username is null)
         {
             Console.WriteLine("Username is required");
             username = Console.ReadLine();
         }
-        Console.WriteLine("Enter Password:");
+        Console.WriteLine("Please choose a Password:");
         string? password = Console.ReadLine();
         while (password is null)
         {

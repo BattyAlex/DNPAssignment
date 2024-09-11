@@ -6,10 +6,12 @@ namespace CLI.UI.ManagePosts;
 public class SinglePostView
 {
     private readonly IPostRepository _postRepository;
+    private ViewHandler viewHandler;
 
-    public SinglePostView(IPostRepository postRepository)
+    public SinglePostView(IPostRepository postRepository, ViewHandler viewHandler )
     {
         _postRepository = postRepository;
+        this.viewHandler = viewHandler;
     }
 
     public async Task ShowPostById(int postId)

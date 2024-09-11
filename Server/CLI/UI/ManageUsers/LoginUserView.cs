@@ -1,7 +1,15 @@
-﻿namespace CLI.UI.ManageUsers;
+﻿using CLI.UI.ManagePosts;
+
+namespace CLI.UI.ManageUsers;
 
 public class LoginUserView
 {
+    private ViewHandler viewHandler;
+
+    public LoginUserView(ViewHandler viewHandler)
+    {
+        this.viewHandler = viewHandler;
+    }
     public void Start()
     {
         Console.WriteLine("Please enter Username");

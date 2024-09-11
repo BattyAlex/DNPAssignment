@@ -5,10 +5,12 @@ namespace CLI.UI.ManagePosts;
 public class CreatePostView
 {
     private readonly IPostRepository postRepository;
+    private ViewHandler viewHandler;
 
-    public CreatePostView(IPostRepository postRepository)
+    public CreatePostView(IPostRepository postRepository, ViewHandler viewHandler)
     {
         this.postRepository = postRepository;
+        this.viewHandler = viewHandler;
     }
 
     public class ExecuteCommand()

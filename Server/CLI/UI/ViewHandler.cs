@@ -17,15 +17,23 @@ public class ViewHandler
     private LoginUserView loginUserView;
     private ManageUsersView manageUsersView;
     private CreateUserView createUserView;
+    private CreatePostView createPostView;
+    private ListPostView listPostView;
+    private SinglePostView singlePostView;
+    private ManagePostView managePostView;
     public ViewHandler(IUserRepository userRep, ICommentRepository commentRep, IPostRepository postRep)
     {
         this.userRep = userRep;
         this.commentRep = commentRep;
         this.postRep = postRep;
 
-        loginUserView = new LoginUserView();
+        loginUserView = new LoginUserView(this);
         manageUsersView = new ManageUsersView(this);
-        createUserView = new CreateUserView(this.userRep);
+        createUserView = new CreateUserView(this.userRep, this);
+        createPostView = new CreatePostView(this.postRep, this);
+        listPostView = new ListPostView(this);
+        managePostView = new ManagePostView(this);
+        singlePostView = new SinglePostView(this.postRep, this);
     }
 
     public async Task StartAsync()

@@ -26,7 +26,10 @@ public class ManageUsersView
         }
         else if (input == 2)
         {
+            Console.WriteLine("You chose to create new user.");
             viewHandler.ChangeView(ViewHandler.CREATEUSER);
         }
+        else
+            Console.WriteLine("Goodbye");
     }
 }
