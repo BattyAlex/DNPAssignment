@@ -38,7 +38,7 @@ public class CreatePostView
         }
         Post post = new Post(title, content, posts.UserID ); //gotta figure out how to add the userID
         postRepository.AddPostAsync(post);
-        
+        viewHandler.ChangeView(ViewHandler.LISTPOSTS);
     }
 
 }
