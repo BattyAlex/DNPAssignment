@@ -44,16 +44,18 @@ public class ListPostView
         {
             Console.WriteLine("Please enter an integer.");
         }
+        bool postExists = false;
         foreach (var post in posts)
         {
             if (post.ID == inp)
             {
                 viewHandler.ShowPost(post.ID);
+                postExists = true;
             }
-            else
-            {
-                Console.WriteLine($"Post {post.ID} does not exist.");
-            }
+        }
+        if (!postExists)
+        {
+            Console.WriteLine($"Post {inp} does not exist.");
         }
     }
 }

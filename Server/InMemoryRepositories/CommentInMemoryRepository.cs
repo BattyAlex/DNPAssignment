@@ -12,6 +12,9 @@ public class CommentInMemoryRepository: ICommentRepository
         Comment commentOnDogs1 = new Comment("Good to know!", 1, 1);
         Comment commentOnDogs2 = new Comment("Oh no! Having no insulation must be woofful!", 4, 1);
         Comment commentOnPuns = new Comment("Okay, that was a good one.", 3, 2);
+        AddCommentAsync(commentOnDogs1);
+        AddCommentAsync(commentOnDogs2);
+        AddCommentAsync(commentOnPuns);
     }
     public Task<Comment> AddCommentAsync(Comment comment)
     {
