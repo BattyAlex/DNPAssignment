@@ -9,17 +9,21 @@ public class SinglePostView
     private readonly ICommentRepository commentRepository;
     private readonly IUserRepository userRepository;
     private ViewHandler viewHandler;
+    private UserLoggedIn UserLoggedIn;
 
-    public SinglePostView(IPostRepository postRepository, ICommentRepository commentRepository, IUserRepository userRepository, ViewHandler viewHandler )
+    private int postNumber; 
+    public SinglePostView(IPostRepository postRepository, ICommentRepository commentRepository, IUserRepository userRepository, UserLoggedIn userLoggedIn, ViewHandler viewHandler )
     {
         this.postRepository = postRepository;
         this.viewHandler = viewHandler;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.UserLoggedIn = userLoggedIn;
     }
 
     public async Task ShowPostById(int postId)
     {
+        postNumber = postId;
         Post post = await postRepository.GetSinglePostAsync(postId);
         if (post != null)
         {
@@ -43,10 +47,52 @@ public class SinglePostView
                     }
                 }
             }
+
+            Console.WriteLine("[1 - Add a comment]\n[2 - Back]");
+            string? input = Console.ReadLine();
+            int inp = 0;
+            try
+            {
+                inp = int.Parse(input);
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine("Please enter an integer.");
+            }
+
+            if (inp == 1)
+            {
+                comment();
+            }
+            else if (inp == 2)
+            {
+                viewHandler.ChangeView(ViewHandler.LISTPOSTS);
+            }
         }
         else
         {
             Console.WriteLine("Post not found");
+        }
+    }
+
+    private void comment()
+    {
+        Console.WriteLine("Please write the comment here or type EXIT to abandon comment:");
+        string? commentBody = Console.ReadLine();
+        while (commentBody is null || commentBody.Equals(""))
+        {
+            Console.WriteLine("Please write the comment here or type EXIT to abandon comment:");
+            commentBody = Console.ReadLine();
+        }
+        if (commentBody.Equals("EXIT"))
+        {
+            ShowPostById(postNumber);
+        }
+        else
+        {
+            Comment comment = new Comment(commentBody, UserLoggedIn.User.ID, postNumber);
+            commentRepository.AddCommentAsync(comment);
+            ShowPostById(postNumber);
         }
     }
 }

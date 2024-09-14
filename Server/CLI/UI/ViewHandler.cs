@@ -39,7 +39,7 @@ public class ViewHandler
         createPostView = new CreatePostView(this.postRep, this, userLoggedIn);
         listPostView = new ListPostView(this.postRep,this);
         managePostView = new ManagePostView(this);
-        singlePostView = new SinglePostView(this.postRep,this.commentRep,this.userRep, this);
+        singlePostView = new SinglePostView(this.postRep,this.commentRep,this.userRep,this.userLoggedIn, this);
     }
 
     public async Task StartAsync()
