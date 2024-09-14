@@ -16,13 +16,17 @@ public class ManageUsersView
         Console.WriteLine("[1 - Login]\n[2 - Create new user]");
         string? input = Console.ReadLine();
         int inp = 0;
-        try
+        while (inp == 0)
         {
-            inp = int.Parse(input);
-        }
-        catch (FormatException e)
-        {
-            Console.WriteLine("Please enter an integer.");
+            try
+            {
+                inp = int.Parse(input);
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine("[1 - Login]\n[2 - Create new user]");
+                input = Console.ReadLine();
+            }
         }
         if (inp == 1)
         {

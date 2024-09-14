@@ -51,15 +51,18 @@ public class SinglePostView
             Console.WriteLine("[1 - Add a comment]\n[2 - Back]");
             string? input = Console.ReadLine();
             int inp = 0;
-            try
+            while (inp == 0)
             {
-                inp = int.Parse(input);
+                try
+                {
+                    inp = int.Parse(input);
+                }
+                catch (FormatException e)
+                {
+                    Console.WriteLine("[1 - Add a comment]\n[2 - Back]");
+                    input = Console.ReadLine();
+                }
             }
-            catch (FormatException e)
-            {
-                Console.WriteLine("Please enter an integer.");
-            }
-
             if (inp == 1)
             {
                 comment();
@@ -67,6 +70,10 @@ public class SinglePostView
             else if (inp == 2)
             {
                 viewHandler.ChangeView(ViewHandler.LISTPOSTS);
+            }
+            else
+            {
+                Console.WriteLine("Goodbye.");
             }
         }
         else

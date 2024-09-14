@@ -40,7 +40,7 @@ public class CreatePostView
         }
         Post post = new Post(title, content, userLoggedIn.User.ID); 
         postRepository.AddPostAsync(post);
-        viewHandler.ChangeView(ViewHandler.LISTPOSTS);
+        viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 
 }
