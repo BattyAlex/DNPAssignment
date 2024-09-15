@@ -27,7 +27,7 @@ public class CreateUserView
             Console.WriteLine("Username is required");
             username = Console.ReadLine();
         }
-        while (exists(username))
+        while (Exists(username))
         {
             Console.WriteLine("This username already exists. Try again.");
             username = Console.ReadLine();
@@ -46,7 +46,7 @@ public class CreateUserView
         viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 
-    private bool exists(string username)
+    private bool Exists(string username)
     {
         List<User> users = userRepository.GetManyUsersAsync().ToList();
         foreach (User user in users)

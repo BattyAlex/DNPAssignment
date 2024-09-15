@@ -15,14 +15,15 @@ public class ListPostView
         this.viewHandler = viewHandler;
     }
 
-    public void Show()
+    public void Start()
     {
         Console.WriteLine("Available Posts:");
         var posts = postRepository.GetMultiplePosts().ToList();
 
         if (!posts.Any())
         {
-            Console.WriteLine("No posts available.");
+            Console.WriteLine("======== ========\nNo posts available.\n======== ========");
+            viewHandler.ChangeView(ViewHandler.MANAGEPOST);
             return;
         }
         foreach (var post in posts)

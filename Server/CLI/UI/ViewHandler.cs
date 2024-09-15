@@ -61,13 +61,13 @@ public class ViewHandler
                 createUserView.Start();
                 break;
             case "createpost":
-                createPostView.CreatePost();
+                createPostView.Start();
                 break;
             case "managepost":
                 managePostView.Start();
                 break;
             case "listposts":
-                listPostView.Show();
+                listPostView.Start();
                 break;
             
         }

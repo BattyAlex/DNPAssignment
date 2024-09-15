@@ -25,7 +25,7 @@ public class LoginUserView
             Console.WriteLine("Username is required");
             username = Console.ReadLine();
         }
-        while (isUnique(username))
+        while (IsUnique(username))
         {
             Console.WriteLine("This username doesn't exists. Try again.");
             username = Console.ReadLine();
@@ -38,7 +38,7 @@ public class LoginUserView
             password = Console.ReadLine();
         }
 
-        while (!verify(username, password))
+        while (!Verify(username, password))
         {
             Console.WriteLine("This password does not match the username. Try again.");
             password = Console.ReadLine();
@@ -49,7 +49,7 @@ public class LoginUserView
         viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 
-    private bool isUnique(string username)
+    private bool IsUnique(string username)
     {
         List<User> users = userRepository.GetManyUsersAsync().ToList();
         foreach (User user in users)
@@ -63,7 +63,7 @@ public class LoginUserView
         return true;
     }
 
-    private bool verify(string username, string password)
+    private bool Verify(string username, string password)
     {
         List<User> users = userRepository.GetManyUsersAsync().ToList();
         foreach (User user in users)

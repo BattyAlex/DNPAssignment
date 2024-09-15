@@ -16,13 +16,8 @@ public class CreatePostView
         this.viewHandler = viewHandler;
         this.userLoggedIn = userLoggedIn;
     }
-
-    public class ExecuteCommand()
-    {
-         public CreatePostView createPostView { get; set; }
-    }
-
-    public void CreatePost()
+    
+    public void Start()
     {
         Console.WriteLine("Enter the title of the post:");
         string? title = Console.ReadLine();
@@ -42,5 +37,4 @@ public class CreatePostView
         postRepository.AddPostAsync(post);
         viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
-
 }
