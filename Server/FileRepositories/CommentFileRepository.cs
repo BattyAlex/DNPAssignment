@@ -1,9 +1,7 @@
 ﻿using System.Text.Json;
 using Entities;
 using RepositoryContracts;
-using System.IO;
-using System.Threading.Tasks;
-using System.Linq;
+
 
 namespace FileRepositories;
 
@@ -92,5 +90,4 @@ public class CommentFileRepository: ICommentRepository
         string commentsAsJson = JsonSerializer.Serialize(comments);
         await File.WriteAllTextAsync(filePath, commentsAsJson);
     }
-
 }
