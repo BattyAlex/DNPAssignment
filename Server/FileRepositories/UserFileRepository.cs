@@ -19,8 +19,8 @@ public class UserFileRepository : IUserRepository
     public async Task<User> AddUserAsync(User user)
     {
         List<User> users = await LoadUsers();
-        int maxId = users.Count > 0 ? users.Max(u => u.ID) : 1;
-        user.ID = maxId + 1;
+        int maxId = users.Count > 0 ? users.Max(u => u.Id) : 1;
+        user.Id = maxId + 1;
         users.Add(user);
         SaveUsers(users);
         return user;
@@ -29,10 +29,10 @@ public class UserFileRepository : IUserRepository
     public async Task UpdateUserAsync(User user)
     {
         List<User> users = await LoadUsers();
-        User? existingUser = users.SingleOrDefault(u => u.ID == user.ID);
+        User? existingUser = users.SingleOrDefault(u => u.Id == user.Id);
         if (existingUser is null)
         {
-            throw new InvalidOperationException($"User with ID '{user.ID}' not found");
+            throw new InvalidOperationException($"User with ID '{user.Id}' not found");
         }
         users.Remove(existingUser);
         users.Add(user);
@@ -43,7 +43,7 @@ public class UserFileRepository : IUserRepository
     public async Task DeleteUserAsync(int id)
     {
         List<User> users = await LoadUsers();
-        User? userToDelete = users.FirstOrDefault(u => u.ID == id);
+        User? userToDelete = users.FirstOrDefault(u => u.Id == id);
         if (userToDelete != null)
         {
             users.Remove(userToDelete);
@@ -55,12 +55,12 @@ public class UserFileRepository : IUserRepository
     public async Task<User> GetSingleUserAsync(int id)
     {
         List<User> users = await LoadUsers();
-        User? user = users.FirstOrDefault(u => u.ID == id);
-        if (user != null)
+        User? userToGet = users.SingleOrDefault(u => u.Id == id);
+        if (userToGet is null)
         {
-            return user;
+            throw new InvalidOperationException($"User with ID '{id}' not found");
         }
-        return null;
+        return userToGet;
     }
 
     public IQueryable<User> GetManyUsersAsync()

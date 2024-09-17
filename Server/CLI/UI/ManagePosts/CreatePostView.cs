@@ -33,7 +33,7 @@ public class CreatePostView
             Console.WriteLine("content is required");
             content = Console.ReadLine();
         }
-        Post post = new Post(title, content, userLoggedIn.User.ID); 
+        Post post = new Post(title, content, userLoggedIn.User.Id); 
         postRepository.AddPostAsync(post);
         viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }

@@ -97,7 +97,7 @@ public class SinglePostView
         }
         else
         {
-            Comment comment = new Comment(commentBody, UserLoggedIn.User.ID, postNumber);
+            Comment comment = new Comment(commentBody, UserLoggedIn.User.Id, postNumber);
             commentRepository.AddCommentAsync(comment);
             ShowPostById(postNumber);
         }

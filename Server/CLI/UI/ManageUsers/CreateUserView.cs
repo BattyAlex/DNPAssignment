@@ -39,7 +39,7 @@ public class CreateUserView
             Console.WriteLine("Password is required");
             password = Console.ReadLine();
         }
-        User newUser = new User(password, username);
+        User newUser = new User(username, password);
 
         userRepository.AddUserAsync(newUser);
         userLoggedIn.Login(newUser);
