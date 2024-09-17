@@ -27,7 +27,7 @@ public class PostFileRepository: IPostRepository
 
     public async Task UpdatePostAsync(Post post)
     {
-        List<Post> posts = LoadPosts().Result;
+        List<Post> posts = await LoadPosts();
         Post? postToUpdate = posts.FirstOrDefault(p => p.ID == post.ID);
         if (postToUpdate is null)
         {
@@ -40,7 +40,7 @@ public class PostFileRepository: IPostRepository
 
     public async Task DeletePostAsync(int id)
     {
-        List<Post> posts = LoadPosts().Result;
+        List<Post> posts = await LoadPosts();
         Post? postToDelete = posts.FirstOrDefault(p => p.ID == id);
         if (postToDelete is null)
         {
@@ -52,7 +52,7 @@ public class PostFileRepository: IPostRepository
 
     public async Task<Post> GetSinglePostAsync(int id)
     {
-        List<Post> posts = LoadPosts().Result;
+        List<Post> posts = await LoadPosts();
         Post? postToGet = posts.FirstOrDefault(p => p.ID == id);
         if (postToGet is null)
         {
