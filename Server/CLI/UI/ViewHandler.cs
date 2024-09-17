@@ -1,5 +1,5 @@
 ﻿using CLI.UI.ManageUsers;
-using InMemoryRepositories;
+using FileRepositories;
 using RepositoryContracts;
 
 namespace CLI.UI.ManagePosts;
