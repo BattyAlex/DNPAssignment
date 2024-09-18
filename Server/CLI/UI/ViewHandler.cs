@@ -44,36 +44,36 @@ public class ViewHandler
 
     public async Task StartAsync()
     {
-        ChangeView(MANAGEUSERS);
+        await ChangeView(MANAGEUSERS);
     }
 
-    public void ChangeView(string id)
+    public async Task ChangeView(string id)
     {
         switch (id)
         {
             case "login":
-               loginUserView.Start(); 
+                await loginUserView.Start();
                 break;
             case "manageusers":
-                manageUsersView.Start();
+                await manageUsersView.Start();
                 break;
             case "createuser":
-                createUserView.Start();
+                await createUserView.Start();
                 break;
             case "createpost":
-                createPostView.Start();
+                await createPostView.Start();
                 break;
             case "managepost":
-                managePostView.Start();
+                await managePostView.Start();
                 break;
             case "listposts":
-                listPostView.Start();
+                await listPostView.Start();
                 break;
-            
+
         }
     }
-    public void ShowPost(int postId)
+    public async Task ShowPost(int postId)
     {
-       singlePostView.ShowPostById(postId);
+       await singlePostView.ShowPostById(postId);
     }
 }

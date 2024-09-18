@@ -21,7 +21,7 @@ public class PostFileRepository: IPostRepository
         int maxId = posts.Count > 0 ? posts.Max(x => x.ID) : 1;
         post.ID = maxId + 1;
         posts.Add(post);
-        SavePosts(posts);
+        await SavePosts(posts);
         return post;
     }
 
@@ -35,7 +35,7 @@ public class PostFileRepository: IPostRepository
         }
         posts.Remove(postToUpdate);
         posts.Add(post);
-        SavePosts(posts);
+        await SavePosts(posts);
     }
 
     public async Task DeletePostAsync(int id)
@@ -47,7 +47,7 @@ public class PostFileRepository: IPostRepository
             throw new InvalidOperationException($"Post {id} does not exist"); 
         }
         posts.Remove(postToDelete);
-        SavePosts(posts);
+        await SavePosts(posts);
     }
 
     public async Task<Post> GetSinglePostAsync(int id)
@@ -69,12 +69,12 @@ public class PostFileRepository: IPostRepository
 
     private async Task<List<Post>> LoadPosts()
     {
-        string postsAsJson = await File.ReadAllTextAsync(filePath);
-        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postsAsJson)!;
+        var postsAsJson = await File.ReadAllTextAsync(filePath);
+        var posts = JsonSerializer.Deserialize<List<Post>>(postsAsJson)!;
         return posts;
     }
 
-    private async void SavePosts(List<Post> posts)
+    private async Task SavePosts(List<Post> posts)
     {
         string postsAsJson = JsonSerializer.Serialize(posts);
         await File.WriteAllTextAsync(filePath, postsAsJson);

@@ -7,8 +7,8 @@ namespace CLI.UI.ManageUsers;
 public class CreateUserView
 {
     private readonly IUserRepository userRepository;
-    private ViewHandler viewHandler;
-    private UserLoggedIn userLoggedIn;
+    private readonly ViewHandler viewHandler;
+    private readonly UserLoggedIn userLoggedIn;
     
     public CreateUserView(IUserRepository userRepository, ViewHandler viewHandler, UserLoggedIn userLoggedIn)
     {
@@ -17,7 +17,7 @@ public class CreateUserView
         this.userLoggedIn = userLoggedIn;
     }
 
-    public void Start()
+    public async Task Start()
     {
         Console.WriteLine("Please choose a Username:");
         string? username = Console.ReadLine();
@@ -40,9 +40,9 @@ public class CreateUserView
         }
         User newUser = new User(username, password);
 
-        userRepository.AddUserAsync(newUser);
+        await userRepository.AddUserAsync(newUser);
         userLoggedIn.Login(newUser);
-        viewHandler.ChangeView(ViewHandler.MANAGEPOST);
+        await viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 
     private bool Exists(string username)

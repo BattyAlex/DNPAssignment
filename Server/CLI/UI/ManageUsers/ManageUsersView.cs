@@ -5,12 +5,12 @@ namespace CLI.UI.ManageUsers;
 
 public class ManageUsersView
 {
-    private ViewHandler viewHandler;
+    private readonly ViewHandler viewHandler;
     public ManageUsersView(ViewHandler viewHandler)
     {
         this.viewHandler = viewHandler;
     }
-    public void Start()
+    public async Task Start()
     {
         Console.WriteLine("Hello and welcome to Reddat! What would you like to do?");
         Console.WriteLine("[1 - Login]\n[2 - Create new user]");
@@ -31,12 +31,12 @@ public class ManageUsersView
         if (inp == 1)
         {
             Console.WriteLine("You chose to log in.");
-            viewHandler.ChangeView(ViewHandler.LOGIN);
+            await viewHandler.ChangeView(ViewHandler.LOGIN);
         }
         else if (inp == 2)
         {
             Console.WriteLine("You chose to create new user.");
-            viewHandler.ChangeView(ViewHandler.CREATEUSER);
+            await viewHandler.ChangeView(ViewHandler.CREATEUSER);
         }
         else
         {

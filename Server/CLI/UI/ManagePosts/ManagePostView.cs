@@ -2,14 +2,14 @@
 
 public class ManagePostView
 {
-    private ViewHandler viewHandler;
+    private readonly ViewHandler viewHandler;
 
     public ManagePostView(ViewHandler viewHandler)
     {
         this.viewHandler = viewHandler;
     }
 
-    public void Start()
+    public async Task Start()
     {
         Console.WriteLine("Welcome to Reddat! What would you like to do?");
         Console.WriteLine("[1 - Add a new post]\n[2 - View existing posts]");
@@ -30,12 +30,12 @@ public class ManagePostView
         if (choice == 1)
         {
             Console.WriteLine("You chose to add a new post");
-            viewHandler.ChangeView(ViewHandler.CREATEPOST);
+            await viewHandler.ChangeView(ViewHandler.CREATEPOST);
         }
         else if (choice == 2)
         {
         Console.WriteLine("You chose to view existing posts");
-        viewHandler.ChangeView(ViewHandler.LISTPOSTS);
+        await viewHandler.ChangeView(ViewHandler.LISTPOSTS);
         }
         else
         {

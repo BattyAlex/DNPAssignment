@@ -8,8 +8,8 @@ public class SinglePostView
     private readonly IPostRepository postRepository;
     private readonly ICommentRepository commentRepository;
     private readonly IUserRepository userRepository;
-    private ViewHandler viewHandler;
-    private UserLoggedIn UserLoggedIn;
+    private readonly ViewHandler viewHandler;
+    private readonly UserLoggedIn userLoggedIn;
 
     private int postNumber; 
     public SinglePostView(IPostRepository postRepository, ICommentRepository commentRepository, IUserRepository userRepository, UserLoggedIn userLoggedIn, ViewHandler viewHandler )
@@ -18,7 +18,7 @@ public class SinglePostView
         this.viewHandler = viewHandler;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
-        this.UserLoggedIn = userLoggedIn;
+        this.userLoggedIn = userLoggedIn;
     }
 
     public async Task ShowPostById(int postId)
@@ -29,7 +29,7 @@ public class SinglePostView
             Console.WriteLine($"Content: {post.Content}", post.Content);
             Console.WriteLine("======== Comments ========");
             var comments = commentRepository.GetAll().ToList();
-            if (!comments.Any())
+            if (comments.Count == 0)
             {
                 Console.WriteLine("There are currently no comments.");
             }
@@ -53,7 +53,7 @@ public class SinglePostView
             {
                 try
                 {
-                    inp = int.Parse(input);
+                    inp = int.Parse(input!);
                 }
                 catch (FormatException e)
                 {
@@ -63,11 +63,11 @@ public class SinglePostView
             }
             if (inp == 1)
             {
-                comment();
+               await Comment();
             }
             else if (inp == 2)
             {
-                viewHandler.ChangeView(ViewHandler.LISTPOSTS);
+                await viewHandler.ChangeView(ViewHandler.LISTPOSTS);
             }
             else
             {
@@ -75,7 +75,7 @@ public class SinglePostView
             }
     }
 
-    private void comment()
+    private async Task Comment()
     {
         Console.WriteLine("Please write the comment here or type EXIT to abandon comment:");
         string? commentBody = Console.ReadLine();
@@ -86,13 +86,13 @@ public class SinglePostView
         }
         if (commentBody.Equals("EXIT"))
         {
-            ShowPostById(postNumber);
+            await ShowPostById(postNumber);
         }
         else
         {
-            Comment comment = new Comment(commentBody, UserLoggedIn.User.Id, postNumber);
-            commentRepository.AddCommentAsync(comment);
-            ShowPostById(postNumber);
+            Comment comment = new Comment(commentBody, userLoggedIn.User.Id, postNumber);
+            await commentRepository.AddCommentAsync(comment);
+            await ShowPostById(postNumber);
         }
     }
 }

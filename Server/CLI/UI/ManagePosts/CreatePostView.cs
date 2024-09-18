@@ -6,9 +6,8 @@ namespace CLI.UI.ManagePosts;
 public class CreatePostView
 {
     private readonly IPostRepository postRepository;
-    private ViewHandler viewHandler;
-    private Post posts;
-    private UserLoggedIn userLoggedIn;
+    private readonly ViewHandler viewHandler;
+    private readonly UserLoggedIn userLoggedIn;
 
     public CreatePostView(IPostRepository postRepository, ViewHandler viewHandler, UserLoggedIn userLoggedIn)
     {
@@ -17,7 +16,7 @@ public class CreatePostView
         this.userLoggedIn = userLoggedIn;
     }
     
-    public void Start()
+    public async Task Start()
     {
         Console.WriteLine("Enter the title of the post:");
         string? title = Console.ReadLine();
@@ -34,7 +33,7 @@ public class CreatePostView
             content = Console.ReadLine();
         }
         Post post = new Post(title, content, userLoggedIn.User.Id); 
-        postRepository.AddPostAsync(post);
-        viewHandler.ChangeView(ViewHandler.MANAGEPOST);
+        await postRepository.AddPostAsync(post);
+        await viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 }

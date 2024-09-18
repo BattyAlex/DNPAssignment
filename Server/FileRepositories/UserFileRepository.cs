@@ -22,7 +22,7 @@ public class UserFileRepository : IUserRepository
         int maxId = users.Count > 0 ? users.Max(u => u.Id) : 1;
         user.Id = maxId + 1;
         users.Add(user);
-        SaveUsers(users);
+        await SaveUsers(users);
         return user;
     }
 
@@ -36,7 +36,7 @@ public class UserFileRepository : IUserRepository
         }
         users.Remove(existingUser);
         users.Add(user);
-        SaveUsers(users);
+        await SaveUsers(users);
     }
 
 
@@ -48,7 +48,7 @@ public class UserFileRepository : IUserRepository
         {
             users.Remove(userToDelete);
 
-            SaveUsers(users);
+            await SaveUsers(users);
         }
     }
 
@@ -76,7 +76,7 @@ public class UserFileRepository : IUserRepository
         return users;
     }
 
-    private async void SaveUsers(List<User> users)
+    private async Task SaveUsers(List<User> users)
     {
         string usersAsJson = JsonSerializer.Serialize(users);
         await File.WriteAllTextAsync(filePath, usersAsJson);

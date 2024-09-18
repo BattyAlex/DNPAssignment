@@ -6,16 +6,16 @@ namespace CLI.UI.ManageUsers;
 
 public class LoginUserView
 {
-    private ViewHandler viewHandler;
-    private UserLoggedIn userLoggedIn;
-    private IUserRepository userRepository;
+    private readonly ViewHandler viewHandler;
+    private readonly UserLoggedIn userLoggedIn;
+    private readonly IUserRepository userRepository;
     public LoginUserView(ViewHandler viewHandler, UserLoggedIn userLoggedIn, IUserRepository userRepository)
     {
         this.viewHandler = viewHandler;
         this.userLoggedIn = userLoggedIn;
         this.userRepository = userRepository;
     }
-    public void Start()
+    public async Task Start()
     {
         Console.WriteLine("Please enter Username");
         string? username = Console.ReadLine();
@@ -43,9 +43,9 @@ public class LoginUserView
             password = Console.ReadLine();
         }
         User userLoggingIn = new User(username, password);
-        userRepository.AddUserAsync(userLoggingIn);
+        await userRepository.AddUserAsync(userLoggingIn);
         userLoggedIn.Login(userLoggingIn);
-        viewHandler.ChangeView(ViewHandler.MANAGEPOST);
+        await viewHandler.ChangeView(ViewHandler.MANAGEPOST);
     }
 
     private bool IsUnique(string username)

@@ -5,7 +5,7 @@ namespace CLI.UI.ManagePosts;
 
 public class ListPostView
 {
-    private ViewHandler viewHandler;
+    private readonly ViewHandler viewHandler;
     private readonly IPostRepository postRepository;
 
     public ListPostView(IPostRepository postRepository, ViewHandler viewHandler)
@@ -14,7 +14,7 @@ public class ListPostView
         this.viewHandler = viewHandler;
     }
 
-    public void Start()
+    public async Task Start()
     {
         Console.WriteLine("Available Posts:");
         var posts = postRepository.GetMultiplePosts().ToList();
@@ -22,7 +22,7 @@ public class ListPostView
         if (!posts.Any())
         {
             Console.WriteLine("======== ========\nNo posts available.\n======== ========");
-            viewHandler.ChangeView(ViewHandler.MANAGEPOST);
+            await viewHandler.ChangeView(ViewHandler.MANAGEPOST);
             return;
         }
         foreach (var post in posts)
@@ -38,7 +38,7 @@ public class ListPostView
         {
             try
             {
-                choosenAction = int.Parse(input);
+                choosenAction = int.Parse(input!);
             }
             catch (Exception e)
             {
@@ -48,11 +48,11 @@ public class ListPostView
         }
         if (choosenAction == 1)
         {
-            postChosen(posts);
+            await PostChosen(posts);
         }
         else if (choosenAction == 2)
         {
-           viewHandler.ChangeView(ViewHandler.MANAGEPOST); 
+           await viewHandler.ChangeView(ViewHandler.MANAGEPOST); 
         }
         else
         {
@@ -60,7 +60,7 @@ public class ListPostView
         }
     }
 
-    private void postChosen(List<Post> posts)
+    private async Task PostChosen(List<Post> posts)
     {
         Console.WriteLine("Choose a post by typing the ID:");
         string? input = Console.ReadLine();
@@ -82,7 +82,7 @@ public class ListPostView
         {
             if (post.ID == inp)
             {
-                viewHandler.ShowPost(post.ID);
+                await viewHandler.ShowPost(post.ID);
                 postExists = true;
             }
         }
