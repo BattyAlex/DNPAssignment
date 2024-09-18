@@ -29,7 +29,6 @@ public class SinglePostView
             Console.WriteLine($"Content: {post.Content}", post.Content);
             Console.WriteLine("======== Comments ========");
             var comments = commentRepository.GetAll().ToList();
-             
             if (!comments.Any())
             {
                 Console.WriteLine("There are currently no comments.");

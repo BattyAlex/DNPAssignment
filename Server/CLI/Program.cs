@@ -2,7 +2,6 @@
 
 using CLI.UI.ManagePosts;
 using FileRepositories;
-using InMemoryRepositories;
 using RepositoryContracts;
 
 Console.WriteLine("Starting CLI app...");
