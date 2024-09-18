@@ -25,12 +25,11 @@ public class SinglePostView
     {
         postNumber = postId;
         Post post = await postRepository.GetSinglePostAsync(postId);
-        if (post != null)
-        {
             Console.WriteLine($"Title: {post.Title}", post.Title);
             Console.WriteLine($"Content: {post.Content}", post.Content);
             Console.WriteLine("======== Comments ========");
-            List<Comment> comments = commentRepository.GetAll().ToList();
+            var comments = commentRepository.GetAll().ToList();
+             
             if (!comments.Any())
             {
                 Console.WriteLine("There are currently no comments.");
@@ -75,11 +74,6 @@ public class SinglePostView
             {
                 Console.WriteLine("Goodbye.");
             }
-        }
-        else
-        {
-            Console.WriteLine("Post not found");
-        }
     }
 
     private void comment()

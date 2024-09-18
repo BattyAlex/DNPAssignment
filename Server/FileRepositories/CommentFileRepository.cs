@@ -69,7 +69,7 @@ public class CommentFileRepository: ICommentRepository
         try
         {
             string commentsAsJson = await File.ReadAllTextAsync(filePath);
-            var comments = JsonSerializer.Deserialize<List<Comment>>(commentsAsJson) ?? new List<Comment>();
+            var comments = JsonSerializer.Deserialize<List<Comment>>(commentsAsJson)!;
             return comments;
         }
         catch (Exception ex)
@@ -81,7 +81,7 @@ public class CommentFileRepository: ICommentRepository
 
     public IQueryable<Comment> GetAll()
     {
-        var comments = LoadComments().GetAwaiter().GetResult();
+        var comments = LoadComments().Result;
         return comments.AsQueryable();
     }
 
