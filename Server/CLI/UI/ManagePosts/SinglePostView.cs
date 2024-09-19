@@ -25,8 +25,8 @@ public class SinglePostView
     {
         postNumber = postId;
         Post post = await postRepository.GetSinglePostAsync(postId);
-            Console.WriteLine($"Title: {post.Title}", post.Title);
-            Console.WriteLine($"Content: {post.Content}", post.Content);
+            Console.WriteLine($"Title: {post.Title} (Posted by: {userRepository.GetSingleUserAsync(post.UserID).Result.Name})");
+            Console.WriteLine($"Content: {post.Content}");
             Console.WriteLine("======== Comments ========");
             var comments = commentRepository.GetAll().ToList();
             if (comments.Count == 0)
