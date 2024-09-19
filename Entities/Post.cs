@@ -13,7 +13,7 @@ public class Post
         UserID = userId;
     }
 
-    private Post()
+    public Post()
     {
         
     }
