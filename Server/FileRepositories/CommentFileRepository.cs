@@ -18,7 +18,7 @@ public class CommentFileRepository: ICommentRepository
     public async Task<Comment> AddCommentAsync(Comment comment)
     {
         var comments = await LoadComments();
-        var maxId = comments.Count > 0 ? comments.Max(c => c.Id) : 1;
+        var maxId = comments.Count > 0 ? comments.Max(c => c.Id) : 0;
         comment.Id = maxId + 1;
         comments.Add(comment);
         await SaveComments(comments);
