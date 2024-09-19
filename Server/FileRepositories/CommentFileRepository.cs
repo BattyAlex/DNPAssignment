@@ -67,16 +67,9 @@ public class CommentFileRepository: ICommentRepository
     }
     private async Task<List<Comment>> LoadComments()
     {
-        try
-        {
-            var commentsAsJson = await File.ReadAllTextAsync(filePath);
-            List<Comment> comments = JsonSerializer.Deserialize<List<Comment>>(commentsAsJson)!;
-            return comments;
-        }
-        catch (AggregateException ex)
-        {
-            throw new InvalidOperationException("Error loading comments from file.", ex);
-        }
+        var commentsAsJson = await File.ReadAllTextAsync(filePath);
+        List<Comment> comments = JsonSerializer.Deserialize<List<Comment>>(commentsAsJson)!;
+        return comments;
     }
     private async Task SaveComments(List<Comment> comments)
     {

@@ -12,4 +12,9 @@ public class Post
         Content = content;
         UserID = userId;
     }
+
+    private Post()
+    {
+        
+    }
 }
