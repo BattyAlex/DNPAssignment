@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DataTransferObjects;
+using Entities;
 using RepositoryContracts;
 
 namespace InMemoryRepositories;
@@ -25,7 +26,7 @@ public class PostInMemoryRepository : IPostRepository
         return Task.FromResult(post);
     }
 
-    public Task UpdatePostAsync(Post post)
+    public Task UpdatePostAsync(Post post, ReplacePostDTO updatedPostDto)
     {
         Post ? postToUpdate = Posts.FirstOrDefault(p => p.ID == post.ID);
         if (postToUpdate is null)
