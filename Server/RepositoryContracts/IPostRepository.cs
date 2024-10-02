@@ -10,7 +10,7 @@ public interface IPostRepository
    Task DeletePostAsync(int  id);
    Task<Post> GetSinglePostAsync(int id);
    IQueryable<Post> GetMultiplePosts();
-   List<Post> GetAllPosts();
+  
    
    
 }

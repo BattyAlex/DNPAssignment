@@ -71,7 +71,7 @@ public class PostsController
     [HttpGet]
         public IResult GetManyPosts([FromQuery] int id, [FromRoute] string? nameContains)
         {
-            List<Post> posts = postRepository.GetAllPosts();
+            List<Post> posts = postRepository.GetMultiplePosts().ToList();
             if (id != null)
             {
                 posts = posts.Where(p => p.ID == id).ToList();

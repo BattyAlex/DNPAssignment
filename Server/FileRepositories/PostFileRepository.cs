@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using DataTransferObjects;
 using Entities;
 using RepositoryContracts;
 namespace FileRepositories;
@@ -25,7 +26,7 @@ public class PostFileRepository: IPostRepository
         return post;
     }
 
-    public async Task UpdatePostAsync(Post post)
+    public async Task UpdatePostAsync(Post post, ReplacePostDTO updatedPost)
     {
         List<Post> posts = await LoadPosts();
         Post? postToUpdate = posts.FirstOrDefault(p => p.ID == post.ID);
