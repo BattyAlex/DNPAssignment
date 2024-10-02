@@ -13,8 +13,10 @@ public class Post
         UserID = userId;
     }
 
-    public Post()
+    public Post(string title, string content)
     {
-        
+        Title = title;
+        Content = content;
     }
+    public Post(){}
 }

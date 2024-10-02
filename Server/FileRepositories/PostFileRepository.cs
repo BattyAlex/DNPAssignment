@@ -26,7 +26,7 @@ public class PostFileRepository: IPostRepository
         return post;
     }
 
-    public async Task UpdatePostAsync(Post post, ReplacePostDTO updatedPost)
+    public async Task UpdatePostAsync(Post post)
     {
         List<Post> posts = await LoadPosts();
         Post? postToUpdate = posts.FirstOrDefault(p => p.ID == post.ID);

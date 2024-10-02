@@ -26,7 +26,7 @@ public class PostInMemoryRepository : IPostRepository
         return Task.FromResult(post);
     }
 
-    public Task UpdatePostAsync(Post post, ReplacePostDTO updatedPostDto)
+    public Task UpdatePostAsync(Post post)
     {
         Post ? postToUpdate = Posts.FirstOrDefault(p => p.ID == post.ID);
         if (postToUpdate is null)

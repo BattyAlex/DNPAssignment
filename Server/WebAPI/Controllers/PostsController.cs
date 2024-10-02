@@ -36,16 +36,18 @@ public class PostsController
     [HttpPut]
     public async Task<IResult> UpdatePost([FromRoute] int id, [FromBody] ReplacePostDTO request)
     {
-        UpdatePostDTO post = new()
+        try
         {
-            id = id
-        };
-        Post updated = new()
+         Post post = new(request.Title, request.Content);
+         post.ID = id;
+         await postRepository.UpdatePostAsync(post);
+         return Results.Created($"/Posts/{post.ID}", post);
+        }
+        catch (Exception e)
         {
-            ID = post.id,
-        };
-        await postRepository.UpdatePostAsync(updated, request);
-        return Results.NoContent();
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     [HttpDelete]
