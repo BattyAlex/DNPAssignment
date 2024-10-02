@@ -18,15 +18,11 @@ public class CommentsController:ControllerBase
     }
 
     [HttpPost]
-    public async Task<IResult> CreateComment(
-        [FromBody] CreateCommentDto request)
+    public async Task<IResult> CreateComment([FromBody] CreateCommentDto request)
     {
-        Comment comment = new Comment
-        {
-            CommentBody = request.CommentBody
-        };
-        await commentRepository.AddCommentAsync(comment);
-        return Results.Created($"/api/comments/{comment.Id}", comment);
+        Comment comment = new(request.CommentBody);
+        Comment created = await commentRepository.AddCommentAsync(comment);
+        return Results.Created($"/api/comments/{comment.Id}", created);
     }
 
     [HttpGet("{id}")]
@@ -44,15 +40,13 @@ public class CommentsController:ControllerBase
         }
     }
     [HttpGet]
-    public async Task<IResult> GetMany([FromQuery] string? body,
-        [FromQuery] int? userId, [FromQuery] int? postId)
+    public IResult GetMany([FromQuery] string? body, [FromQuery] int? userId, [FromQuery] int? postId)
     {
         List<Comment> comments = commentRepository.GetAll().ToList();
 
         if (!string.IsNullOrWhiteSpace(body))
         {
-            comments = comments
-                .Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
+            comments = comments.Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
         }
 
 
@@ -71,15 +65,14 @@ public class CommentsController:ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IResult> DeleteComment([FromRoute] int Id)
+    public async Task<IResult> DeleteComment([FromRoute] int id)
     {
-        await commentRepository.DeleteCommentAsync(Id);
+        await commentRepository.DeleteCommentAsync(id);
         return Results.NoContent();
     }
 
     [HttpPut("{id}")]
-    public async Task<IResult> UpdateComment([FromRoute] int id,
-        [FromBody] ReplaceCommentDTO request)
+    public async Task<IResult> UpdateComment([FromRoute] int id, [FromBody] ReplaceCommentDTO request)
     {
         UpdateCommentDTO comment = new()
         {

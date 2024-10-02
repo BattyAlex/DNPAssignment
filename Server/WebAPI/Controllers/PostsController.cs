@@ -23,12 +23,14 @@ public class PostsController
     public async Task<IResult> CreatePost([FromBody] CreatePostDTO post)
     {
 
-        Post newPost = new()
+        Post newPost = new Post()
         {
-            Content = post.Text
+            Title = post.Title,
+            Content = post.Content
+            
         };
-        Post created = await postRepository.AddPostAsync(newPost);
-        return Results.Created($"/Posts/{created.ID}", created);
+        await postRepository.AddPostAsync(newPost);
+        return Results.Created($"/Posts/{newPost.ID}", newPost);
     }
 
     [HttpPut]

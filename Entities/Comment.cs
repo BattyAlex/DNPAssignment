@@ -11,6 +11,11 @@ public class Comment
         {
         }
 
+        public Comment(string commentBody)
+        {
+            this.CommentBody = commentBody;
+        }
+
         public Comment(string body, int userId, int postId)
         {
             CommentBody = body;
