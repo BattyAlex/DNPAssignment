@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using DataTransferObjects;
 using Entities;
 using RepositoryContracts;
 namespace FileRepositories;
@@ -24,7 +25,7 @@ public class CommentFileRepository: ICommentRepository
         await SaveComments(comments);
         return comment;
     }
-    public async Task UpdateCommentAsync(Comment comment)
+    public async Task UpdateCommentAsync(Comment comment, ReplaceCommentDTO replaceCommentDTO)
     {
         var comments = await LoadComments();
         var commentToUpdate = comments.FirstOrDefault(c => c.Id == comment.Id);

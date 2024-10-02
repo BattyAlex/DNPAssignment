@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DataTransferObjects;
+using Entities;
 using RepositoryContracts;
 
 namespace InMemoryRepositories;
@@ -25,7 +26,7 @@ public class CommentInMemoryRepository: ICommentRepository
         return Task.FromResult(comment);
     }
 
-    public Task UpdateCommentAsync(Comment comment)
+    public Task UpdateCommentAsync(Comment comment, ReplaceCommentDTO replaceCommentDTO)
     {
         Comment? existingComment =
             comments.SingleOrDefault(c => c.Id == comment.Id);

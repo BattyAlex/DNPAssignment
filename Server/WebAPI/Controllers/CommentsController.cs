@@ -73,6 +73,7 @@ public class CommentsController:ControllerBase
     [HttpDelete("{id}")]
     public async Task<IResult> DeleteComment([FromRoute] int Id)
     {
+        await commentRepository.DeleteCommentAsync(Id);
         return Results.NoContent();
     }
 
@@ -80,6 +81,15 @@ public class CommentsController:ControllerBase
     public async Task<IResult> UpdateComment([FromRoute] int id,
         [FromBody] ReplaceCommentDTO request)
     {
+        UpdateCommentDTO comment = new()
+        {
+            id = id
+        };
+        Comment updated = new()
+        {
+            Id = comment.id
+        };
+        await commentRepository.UpdateCommentAsync(updated, request);
         return Results.NoContent();
     }
 }

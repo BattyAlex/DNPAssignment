@@ -53,7 +53,7 @@ public class PostsController
         return Results.NoContent();
     }
 
-    [HttpGet]
+    [HttpGet("{id}")]
     public async Task<IResult> GetSinglePost([FromRoute] int id)
     {
         try
@@ -69,14 +69,9 @@ public class PostsController
     }
 
     [HttpGet]
-        public IResult GetManyPosts([FromQuery] int id, [FromRoute] string? nameContains)
+        public IResult GetManyPosts([FromRoute] string? nameContains)
         {
             List<Post> posts = postRepository.GetMultiplePosts().ToList();
-            if (id != null)
-            {
-                posts = posts.Where(p => p.ID == id).ToList();
-            }
-
             if (!string.IsNullOrWhiteSpace(nameContains))
             {
                 posts = posts.Where(p => p.Title.ToLower().Contains(nameContains.ToLower())).ToList();
