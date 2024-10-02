@@ -40,15 +40,13 @@ public class CommentsController:ControllerBase
         }
     }
     [HttpGet]
-    public async Task<IResult> GetMany([FromQuery] string? body,
-        [FromQuery] int? userId, [FromQuery] int? postId)
+    public IResult GetMany([FromQuery] string? body, [FromQuery] int? userId, [FromQuery] int? postId)
     {
         List<Comment> comments = commentRepository.GetAll().ToList();
 
         if (!string.IsNullOrWhiteSpace(body))
         {
-            comments = comments
-                .Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
+            comments = comments.Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
         }
 
 
