@@ -107,16 +107,15 @@ public class UsersController : ControllerBase
         try
         {
             List<User> users = userRepo.GetManyUsersAsync().ToList();
-            if (id != null)
-            {
-                users = users.Where(u => u.Id == id).ToList();
-            }
+            ///if (id != null)
+            ///{
+                ///users = users.Where(u => u.Id == id).ToList();
+            ///}
 
             if (!string.IsNullOrEmpty(nameContains))
             {
                 users = users.Where(u => u.Name.Contains(nameContains)).ToList();
             }
-
             return Results.Ok(users);
         }
         catch (Exception e)
