@@ -26,7 +26,7 @@ public class CommentInMemoryRepository: ICommentRepository
         return Task.FromResult(comment);
     }
 
-    public Task UpdateCommentAsync(Comment comment, ReplaceCommentDTO replaceCommentDTO)
+    public Task UpdateCommentAsync(Comment comment)
     {
         Comment? existingComment =
             comments.SingleOrDefault(c => c.Id == comment.Id);

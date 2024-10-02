@@ -20,9 +20,17 @@ public class CommentsController:ControllerBase
     [HttpPost]
     public async Task<IResult> CreateComment([FromBody] CreateCommentDto request)
     {
-        Comment comment = new(request.CommentBody);
-        Comment created = await commentRepository.AddCommentAsync(comment);
-        return Results.Created($"/api/comments/{comment.Id}", created);
+        try
+        {
+            Comment comment = new(request.CommentBody);
+            Comment created = await commentRepository.AddCommentAsync(comment);
+            return Results.Created($"/api/comments/{comment.Id}", created);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     [HttpGet("{id}")]
@@ -42,47 +50,66 @@ public class CommentsController:ControllerBase
     [HttpGet]
     public IResult GetMany([FromQuery] string? body, [FromQuery] int? userId, [FromQuery] int? postId)
     {
-        List<Comment> comments = commentRepository.GetAll().ToList();
-
-        if (!string.IsNullOrWhiteSpace(body))
+        try
         {
-            comments = comments.Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
+            List<Comment> comments = commentRepository.GetAll().ToList();
+
+            if (!string.IsNullOrWhiteSpace(body))
+            {
+                comments = comments.Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
+            }
+
+
+            if (userId.HasValue)
+            {
+                comments = comments.Where(c => c.UserId == userId).ToList();
+            }
+
+
+            if (postId.HasValue)
+            {
+                comments = comments.Where(c => c.PostId == postId).ToList();
+            }
+
+            return Results.Ok(comments);
         }
-
-
-        if (userId.HasValue)
+        catch (Exception e)
         {
-            comments = comments.Where(c => c.UserId == userId).ToList();
+            Console.WriteLine(e);
+            throw;
         }
-
-
-        if (postId.HasValue)
-        {
-            comments = comments.Where(c => c.PostId == postId).ToList();
-        }
-
-        return Results.Ok(comments);
     }
 
     [HttpDelete("{id}")]
     public async Task<IResult> DeleteComment([FromRoute] int id)
     {
-        await commentRepository.DeleteCommentAsync(id);
-        return Results.NoContent();
+        try
+        {
+            await commentRepository.DeleteCommentAsync(id);
+            return Results.NoContent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IResult> UpdateComment([FromRoute] int id, [FromBody] ReplaceCommentDTO request)
+    [HttpPut]
+    public async Task<IResult> UpdateComment([FromBody] ReplaceCommentDTO request)
     {
-        UpdateCommentDTO comment = new()
+        try
         {
-            id = id
-        };
-        Comment updated = new()
+            Comment comment = new(request.CommentBody);
+            comment.Id = request.Id;
+            await commentRepository.UpdateCommentAsync(comment);
+
+            return Results.Created($"/api/comments/{comment.Id}", comment);
+        }
+        catch (Exception e)
         {
-            Id = comment.id
-        };
-        await commentRepository.UpdateCommentAsync(updated, request);
-        return Results.NoContent();
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

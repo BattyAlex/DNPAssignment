@@ -25,13 +25,13 @@ public class CommentFileRepository: ICommentRepository
         await SaveComments(comments);
         return comment;
     }
-    public async Task UpdateCommentAsync(Comment comment, ReplaceCommentDTO replaceCommentDTO)
+    public async Task UpdateCommentAsync(Comment comment)
     {
         var comments = await LoadComments();
         var commentToUpdate = comments.FirstOrDefault(c => c.Id == comment.Id);
         if (commentToUpdate is null)
         {
-            throw new InvalidOperationException($"Post {comment.Id} does not exist");
+            throw new InvalidOperationException($"Comment {comment.Id} does not exist");
         }
         comments.Remove(commentToUpdate);
         comments.Add(comment);
