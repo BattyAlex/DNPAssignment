@@ -76,7 +76,6 @@ public class PostsController
             {
                 posts = posts.Where(p => p.Title.ToLower().Contains(nameContains.ToLower())).ToList();
             }
-
             return Results.Ok(posts);
         }
 }

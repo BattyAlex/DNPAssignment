@@ -35,7 +35,7 @@ public class UsersController : ControllerBase
                 Id = created.Id,
                 Username = created.Name
             };
-            return Created($"/Users/{dto.Id}", created);
+            return Created($"/Users/{dto.Id}", dto);
         }
         catch (Exception e)
         {
@@ -43,7 +43,88 @@ public class UsersController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
-    
+
+    [HttpGet("{id}")]
+    public async Task<IResult> GetSingleUser([FromRoute] int id)
+    {
+        try
+        {
+            User result = await userRepo.GetSingleUserAsync(id);
+            UserDTO dto = new()
+            {
+                Id = result.Id,
+                Username = result.Name
+            };
+            return Results.Ok(dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return Results.NotFound(e);
+        }
+    }
+
+    [HttpDelete]
+    public async Task<IResult> DeleteUser([FromRoute] int id)
+    {
+        try
+        {
+            await userRepo.DeleteUserAsync(id);
+            return Results.NoContent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [HttpPut]
+    public async Task<ActionResult<UserDTO>> UpdateUser([FromBody] UpdateUserDTO request)
+    {
+        try
+        {
+            User user = new(request.Username, request.Password);
+            user.Id = request.Id;
+            await userRepo.UpdateUserAsync(user);
+            UserDTO dto = new()
+            {
+                Id = user.Id,
+                Username = user.Name
+            };
+            return Created($"/Users/{user.Id}", dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [HttpGet]
+    public IResult GetManyUsers([FromQuery] int id, [FromQuery] string? nameContains)
+    {
+        try
+        {
+            List<User> users = userRepo.GetManyUsersAsync().ToList();
+            if (id != null)
+            {
+                users = users.Where(u => u.Id == id).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(nameContains))
+            {
+                users = users.Where(u => u.Name.Contains(nameContains)).ToList();
+            }
+
+            return Results.Ok(users);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
     private bool VerifyUserNameAvailable(String userName)
     {
@@ -55,7 +136,6 @@ public class UsersController : ControllerBase
                 return true;
             }
         }
-
         return false;
     }
 }
