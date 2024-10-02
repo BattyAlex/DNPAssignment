@@ -74,8 +74,7 @@ public class CommentsController:ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IResult> UpdateComment([FromRoute] int id,
-        [FromBody] ReplaceCommentDTO request)
+    public async Task<IResult> UpdateComment([FromRoute] int id, [FromBody] ReplaceCommentDTO request)
     {
         UpdateCommentDTO comment = new()
         {
