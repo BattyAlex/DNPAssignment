@@ -47,12 +47,12 @@ public class CommentsController:ControllerBase
     public async Task<IResult> GetMany([FromQuery] string? body,
         [FromQuery] int? userId, [FromQuery] int? postId)
     {
-        List<Comment> comments = commentRepository.GetAll();
+        List<Comment> comments = commentRepository.GetAllComments();
 
         if (!string.IsNullOrWhiteSpace(body))
         {
             comments = comments
-                .Where(c => c.Body.ToLower().Contains(body.ToLower())).ToList();
+                .Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
         }
 
 
