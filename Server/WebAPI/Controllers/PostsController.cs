@@ -25,7 +25,9 @@ public class PostsController
 
         Post newPost = new()
         {
+            Title = post.Text,
             Content = post.Text
+            
         };
         Post created = await postRepository.AddPostAsync(newPost);
         return Results.Created($"/Posts/{created.ID}", created);
