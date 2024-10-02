@@ -1,12 +1,14 @@
 ﻿using Entities;
 using RepositoryContracts;
-
+using DataTransferObjects;
+using Entities;
 namespace WebAPI.Controllers;
-
+using Microsoft.AspNetCore.Mvc;
+using RepositoryContracts;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
-public class CommentsController
+public class CommentsController:ControllerBase
 {
     private readonly ICommentRepository commentRepository;
 
@@ -21,7 +23,7 @@ public class CommentsController
     {
         Comment comment = new Comment
         {
-            CommentBody = request.CommentBody,
+            CommentBody = request.CommentBody
         };
         await commentRepository.AddCommentAsync(comment);
         return Results.Created($"/api/comments/{comment.Id}", comment);
@@ -76,7 +78,7 @@ public class CommentsController
 
     [HttpPut("{id}")]
     public async Task<IResult> UpdateComment([FromRoute] int id,
-        [FromBody] ReplaceCommentDto request)
+        [FromBody] ReplaceCommentDTO request)
     {
         return Results.NoContent();
     }
