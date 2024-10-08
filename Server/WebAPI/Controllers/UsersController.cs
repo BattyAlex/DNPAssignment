@@ -30,12 +30,7 @@ public class UsersController : ControllerBase
 
             User user = new(request.Username, request.Password);
             User created = await userRepo.AddUserAsync(user);
-            UserDTO dto = new()
-            {
-                Id = created.Id,
-                Username = created.Name
-            };
-            return Created($"/Users/{dto.Id}", dto);
+            return Created($"/Users/{created.Id}", created);
         }
         catch (Exception e)
         {
@@ -84,8 +79,11 @@ public class UsersController : ControllerBase
     {
         try
         {
-            User user = new(request.Username, request.Password);
-            user.Id = request.Id;
+            User user = userRepo.GetSingleUserAsync(request.Id).Result;
+            user.Name = request.Username;
+            user.Password = request.Password;
+            //User user = new(request.Username, request.Password);
+            //user.Id = request.Id;
             await userRepo.UpdateUserAsync(user);
             UserDTO dto = new()
             {
@@ -107,11 +105,6 @@ public class UsersController : ControllerBase
         try
         {
             List<User> users = userRepo.GetManyUsersAsync().ToList();
-            ///if (id != null)
-            ///{
-                ///users = users.Where(u => u.Id == id).ToList();
-            ///}
-
             if (!string.IsNullOrEmpty(nameContains))
             {
                 users = users.Where(u => u.Name.Contains(nameContains)).ToList();

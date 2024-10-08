@@ -11,26 +11,36 @@ namespace WebAPI.Controllers;
 public class PostsController
 {
     private readonly IPostRepository postRepository;
+    private readonly IUserRepository userRepository;
     private readonly ICommentRepository commentRepository;
 
-    public PostsController(IPostRepository postRepository, ICommentRepository commentRepository)
+    public PostsController(IPostRepository postRepository, IUserRepository userRepository, ICommentRepository commentRepository)
     {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
         this.commentRepository = commentRepository;
     }
 
     [HttpPost]
     public async Task<IResult> CreatePost([FromBody] CreatePostDTO post)
     {
-
-        Post newPost = new Post()
+        User author = GetUserByName(post.Author);
+        if (author == null)
         {
-            Title = post.Title,
-            Content = post.Content
-            
-        };
-        await postRepository.AddPostAsync(newPost);
-        return Results.Created($"/Posts/{newPost.ID}", newPost);
+            //Handle later
+            throw new ArgumentNullException("User does not exist");
+        }
+        else
+        {
+            Post newPost = new Post()
+                    {
+                        Title = post.Title,
+                        Content = post.Content,
+                        UserID = author.Id
+                    };
+                    await postRepository.AddPostAsync(newPost);
+                    return Results.Created($"/Posts/{newPost.ID}", newPost);
+        }
     }
 
     [HttpPut]
@@ -38,10 +48,11 @@ public class PostsController
     {
         try
         {
-         Post post = new(request.Title, request.Content);
-         post.ID = id;
-         await postRepository.UpdatePostAsync(post);
-         return Results.Created($"/Posts/{post.ID}", post);
+            Post post = postRepository.GetSinglePostAsync(id).Result;
+            post.Content = request.Content;
+            post.Title = request.Title;
+            await postRepository.UpdatePostAsync(post);
+            return Results.Created($"/Posts/{post.ID}", post);
         }
         catch (Exception e)
         {
@@ -58,11 +69,46 @@ public class PostsController
     }
 
     [HttpGet("{id}")]
-    public async Task<IResult> GetSinglePost([FromRoute] int id)
+    public async Task<IResult> GetSinglePost([FromRoute] int id, [FromQuery] bool includeAuthor, [FromQuery] bool includeComments) 
     {
         try
         {
-            Post result = await postRepository.GetSinglePostAsync(id);
+            Post post = await postRepository.GetSinglePostAsync(id);
+            CompletePostDTO result = new()
+            {
+                Title = post.Title,
+                Content = post.Content,
+            };
+            if (includeAuthor)
+            {
+                User author = await userRepository.GetSingleUserAsync(post.UserID);
+                result.Author = new()
+                {
+                    Username = author.Name
+                };
+            }
+
+            if (includeComments)
+            {
+                List<CommentDTO> commentsForPost = new List<CommentDTO>();
+                List<Comment> comments = commentRepository.GetAll().ToList();
+                foreach (Comment comment in comments)
+                {
+                    if (comment.PostId == id)
+                    {
+                        User commenter = userRepository.GetSingleUserAsync(comment.UserId).Result;
+                        CommentDTO com = new()
+                        {
+                            CommentBody = comment.CommentBody,
+                            Commenter = new()
+                            {
+                                Username = commenter.Name
+                            }
+                        };
+                    }
+                }
+                result.Comments = commentsForPost;
+            }
             return Results.Ok(result);
         }
         catch (Exception e)
@@ -82,4 +128,17 @@ public class PostsController
             }
             return Results.Ok(posts);
         }
+
+    private User GetUserByName(string userName)
+    {
+        List<User> users = userRepository.GetManyUsersAsync().ToList();
+        foreach (User user in users)
+        {
+            if (user.Name == userName)
+            {
+                return user;
+            }
+        }
+        return null;
+    }
 }
