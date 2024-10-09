@@ -11,10 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 public class CommentsController:ControllerBase
 {
     private readonly ICommentRepository commentRepository;
+    private readonly IUserRepository userRepository;
+    private readonly IPostRepository postRepository;
 
-    public CommentsController(ICommentRepository commentRepository)
+    public CommentsController(ICommentRepository commentRepository, IUserRepository userRepository, IPostRepository postRepository)
     {
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+        this.postRepository = postRepository;
     }
 
     [HttpPost]
@@ -22,9 +26,32 @@ public class CommentsController:ControllerBase
     {
         try
         {
-            Comment comment = new(request.CommentBody);
-            Comment created = await commentRepository.AddCommentAsync(comment);
-            return Results.Created($"/api/comments/{comment.Id}", created);
+            User commenter = GetUserByName(request.Commenter);
+            try
+            {
+                Post post = postRepository.GetSinglePostAsync(request.PostId).Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return Results.NotFound(e.Message);
+            }
+            
+            if (commenter == null)
+            {
+                return Results.NotFound("User does not exist");
+            }
+            else
+            {
+                Comment comment = new()
+                            {
+                                CommentBody = request.CommentBody,
+                                UserId = commenter.Id,
+                                PostId = request.PostId
+                            };
+                            Comment created = await commentRepository.AddCommentAsync(comment);
+                            return Results.Created($"/api/comments/{comment.Id}", created);
+            }
         }
         catch (Exception e)
         {
@@ -58,19 +85,14 @@ public class CommentsController:ControllerBase
             {
                 comments = comments.Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
             }
-
-
             if (userId.HasValue)
             {
                 comments = comments.Where(c => c.UserId == userId).ToList();
             }
-
-
             if (postId.HasValue)
             {
                 comments = comments.Where(c => c.PostId == postId).ToList();
             }
-
             return Results.Ok(comments);
         }
         catch (Exception e)
@@ -100,8 +122,8 @@ public class CommentsController:ControllerBase
     {
         try
         {
-            Comment comment = new(request.CommentBody);
-            comment.Id = request.Id;
+            Comment comment = commentRepository.GetSingleCommentAsync(request.Id).Result;
+            comment.CommentBody = request.CommentBody;
             await commentRepository.UpdateCommentAsync(comment);
 
             return Results.Created($"/api/comments/{comment.Id}", comment);
@@ -111,5 +133,18 @@ public class CommentsController:ControllerBase
             Console.WriteLine(e);
             throw;
         }
+    }
+    
+    private User GetUserByName(string userName)
+    {
+        List<User> users = userRepository.GetManyUsersAsync().ToList();
+        foreach (User user in users)
+        {
+            if (user.Name == userName)
+            {
+                return user;
+            }
+        }
+        return null;
     }
 }

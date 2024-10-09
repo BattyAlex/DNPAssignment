@@ -27,8 +27,7 @@ public class PostsController
         User author = GetUserByName(post.Author);
         if (author == null)
         {
-            //Handle later
-            throw new ArgumentNullException("User does not exist");
+            return Results.NotFound("User does not exist");
         }
         else
         {
@@ -82,10 +81,7 @@ public class PostsController
             if (includeAuthor)
             {
                 User author = await userRepository.GetSingleUserAsync(post.UserID);
-                result.Author = new()
-                {
-                    Username = author.Name
-                };
+                result.Author = author.Name;
             }
 
             if (includeComments)
@@ -100,11 +96,9 @@ public class PostsController
                         CommentDTO com = new()
                         {
                             CommentBody = comment.CommentBody,
-                            Commenter = new()
-                            {
-                                Username = commenter.Name
-                            }
+                            Commenter = commenter.Name
                         };
+                        commentsForPost.Add(com);
                     }
                 }
                 result.Comments = commentsForPost;
@@ -119,7 +113,7 @@ public class PostsController
     }
 
     [HttpGet]
-        public IResult GetManyPosts([FromRoute] string? nameContains)
+        public IResult GetManyPosts([FromQuery] string? nameContains)
         {
             List<Post> posts = postRepository.GetMultiplePosts().ToList();
             if (!string.IsNullOrWhiteSpace(nameContains))
