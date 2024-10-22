@@ -113,12 +113,16 @@ public class PostsController
     }
 
     [HttpGet]
-        public IResult GetManyPosts([FromQuery] string? nameContains)
+        public IResult GetManyPosts([FromQuery] string? nameContains, [FromQuery] int? writtenBy)
         {
             List<Post> posts = postRepository.GetMultiplePosts().ToList();
             if (!string.IsNullOrWhiteSpace(nameContains))
             {
                 posts = posts.Where(p => p.Title.ToLower().Contains(nameContains.ToLower())).ToList();
+            }
+            if (writtenBy.HasValue)
+            {
+                posts = posts.Where(p => p.UserID == writtenBy).ToList();
             }
             return Results.Ok(posts);
         }

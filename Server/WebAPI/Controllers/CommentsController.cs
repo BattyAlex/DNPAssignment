@@ -60,12 +60,12 @@ public class CommentsController:ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
-    public async Task<IResult> GetSingles([FromRoute] int id)
+    [HttpGet("{commentId}")]
+    public async Task<IResult> GetSingles([FromRoute] int commentId)
     {
         try
         {
-            Comment result = await commentRepository.GetSingleCommentAsync(id);
+            Comment result = await commentRepository.GetSingleCommentAsync(commentId);
             return Results.Ok(result);
         }
         catch (Exception e)
