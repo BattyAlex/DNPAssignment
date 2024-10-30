@@ -7,7 +7,7 @@ public class HttpCommentService : ICommentService
 {
     private readonly HttpClient _httpClient ;
 
-    private HttpCommentService(HttpClient httpClient)
+    public HttpCommentService(HttpClient httpClient)
     {
        
         this._httpClient = httpClient;

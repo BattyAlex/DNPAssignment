@@ -2,37 +2,45 @@
 @using BlazorApp1.Services
 @using DataTransferObjects
 
-<h3>Posts</h3>
 <PageTitle>Post</PageTitle>
 
 <h3>Write a post!</h3>
-<EditForm Model="@post" OnValidSubmit="HandleSubmit">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
 
-    <div>
-        <label>Title:</label>
-        <InputText @bind-Value="post.Title"/>
-    </div>
-    <div>
-        <label>Content:</label>
-        <InputTextArea @bind-Value="post.Content"/>
-    </div>
-    <button type="submit">Submit Post</button>
-</EditForm>
-
-@if (createdPost != null)
+@if (post != null)
 {
-    <p>Post created successfully! Title: @createdPost.Title</p>
+    <p>Post created successfully! Title: @post</p>
 }
 
 @code {
-    private CreatePostDTO post = new CreatePostDTO();
-    private CompletePostDTO createdPost;
+    private string post;
+    private string title;
+    private string content;
 
-    private async Task HandleSubmit()
+    private void HandleSubmit(string Title, string Content)
     {
-        HandleSubmit();
+        if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Content)) 
+        {
+            title = Title;
+           content = Content;
+           post = Title;
+        }
+        else
+        {
+            Console.WriteLine("No fields should be empty.");
+        }
+    }
+    private async Task TriggerSubmit()
+    {
+        HandleSubmit(title, content);
     }
 
 }
+<div>
+    <label>Title:</label>
+    <InputText @bind-Value="title"/>
+</div>
+<div>
+    <label>Content:</label>
+    <InputTextArea @bind-Value="content"/>
+</div>
+<button class="btn btn-primary w-100"  @onclick="TriggerSubmit">Create Post</button>
