@@ -5,6 +5,8 @@
 @page "/post"
 <PageTitle>Post</PageTitle>
 
+<h3>Write a Post!</h3>
+
 @if (!string.IsNullOrEmpty(post))
 {
     <p>Post created successfully! Title: @post</p>
@@ -14,16 +16,22 @@
     private string post;
     private string title;
     private string content;
-    private List<(string Title, string Content)> posts = new List<(string, string)>();
+    private string author;
+    private string commentText;
+    private (string Title, string Content, string Author, List<string> Comments)? selectedPost;
+    
+    private List<(string Title, string Content, string Author, List<string> Comments)> posts 
+        = new List<(string Title, string Content, string Author, List<string> Comments)>();
 
-    private void HandleSubmit(string Title, string Content)
+    private void HandleSubmit(string Title, string Content, string Author)
     {
-        if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Content)) 
+        if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Content) && !string.IsNullOrEmpty(Author)) 
         {
-            posts.Add((Title, Content));
+            posts.Add((Title, Content, Author, new List<string>()));
             post = Title;
             title = string.Empty;
             content = string.Empty;
+            author = string.Empty;
         }
         else
         {
@@ -33,7 +41,21 @@
 
     private async Task TriggerSubmit()
     {
-        HandleSubmit(title, content);
+        HandleSubmit(title, content, author);
+    }
+
+    private void ShowPostDetails((string Title, string Content, string Author, List<string> Comments) post)
+    {
+        selectedPost = post;
+    }
+
+    private void AddComment()
+    {
+        if (!string.IsNullOrEmpty(commentText) && selectedPost != null)
+        {
+            selectedPost.Value.Comments.Add(commentText);
+            commentText = string.Empty;
+        }
     }
 }
 
@@ -45,23 +67,57 @@
     <label>Content:</label>
     <InputTextArea @bind-Value="content" />
 </div>
+<div>
+    <label>Author:</label>
+    <InputText @bind-Value="author" />
+</div>
 <button class="btn btn-primary w-100" @onclick="TriggerSubmit">Create Post</button>
 
-
-<h5>View Posts</h5>
+<h4><strong>View Posts</strong></h4>
 <div>
     @if (posts.Count == 0)
     {
-        <h7>No posts to view</h7>
+        <label>No posts to view</label>
     }
     else
     {
         @foreach (var post in posts)
         {
-            <div class="post-box">
-                <h4 class="post-title">@post.Title</h4>
-                <p>@post.Content</p>
+            <div class="post-box" @onclick="() => ShowPostDetails(post)">
+                <h8 class="post-title">@post.Title</h8>
+                <p>by @post.Author</p>
             </div>
         }
     }
 </div>
+
+@if (selectedPost != null)
+{
+    <div class="post-details">
+        <h8><strong>Post Details</strong></h8>
+        <p><strong>Title:</strong> @selectedPost.Value.Title</p>
+        <p><strong>Content:</strong> @selectedPost.Value.Content</p>
+        <p><strong>Author:</strong> @selectedPost.Value.Author</p>
+
+        <h4><strong>Comments</strong></h4>
+        @if (selectedPost.Value.Comments.Count == 0)
+        {
+            <p>No comments yet.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var comment in selectedPost.Value.Comments)
+                {
+                    <li>@comment</li>
+                }
+            </ul>
+        }
+
+        <div>
+            <label>Add a comment:</label>
+            <InputText @bind-Value="commentText" />
+            <button class="btn btn-secondary" @onclick="AddComment">Add Comment</button>
+        </div>
+    </div>
+}
