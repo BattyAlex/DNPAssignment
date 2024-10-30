@@ -3,7 +3,7 @@ using DataTransferObjects;
 
 namespace BlazorApp1.Services;
 
-public class HttpPostService:IPostService
+public class HttpPostService : IPostService
 {
     private readonly HttpClient _httpClient;
 
