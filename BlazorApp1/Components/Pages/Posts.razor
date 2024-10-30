@@ -2,11 +2,10 @@
 @using BlazorApp1.Services
 @using DataTransferObjects
 
+@page "/post"
 <PageTitle>Post</PageTitle>
 
-<h3>Write a post!</h3>
-
-@if (post != null)
+@if (!string.IsNullOrEmpty(post))
 {
     <p>Post created successfully! Title: @post</p>
 }
@@ -15,32 +14,54 @@
     private string post;
     private string title;
     private string content;
+    private List<(string Title, string Content)> posts = new List<(string, string)>();
 
     private void HandleSubmit(string Title, string Content)
     {
         if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Content)) 
         {
-            title = Title;
-           content = Content;
-           post = Title;
+            posts.Add((Title, Content));
+            post = Title;
+            title = string.Empty;
+            content = string.Empty;
         }
         else
         {
             Console.WriteLine("No fields should be empty.");
         }
     }
+
     private async Task TriggerSubmit()
     {
         HandleSubmit(title, content);
     }
-
 }
+
 <div>
     <label>Title:</label>
-    <InputText @bind-Value="title"/>
+    <InputText @bind-Value="title" />
 </div>
 <div>
     <label>Content:</label>
-    <InputTextArea @bind-Value="content"/>
+    <InputTextArea @bind-Value="content" />
 </div>
-<button class="btn btn-primary w-100"  @onclick="TriggerSubmit">Create Post</button>
+<button class="btn btn-primary w-100" @onclick="TriggerSubmit">Create Post</button>
+
+
+<h5>View Posts</h5>
+<div>
+    @if (posts.Count == 0)
+    {
+        <h7>No posts to view</h7>
+    }
+    else
+    {
+        @foreach (var post in posts)
+        {
+            <div class="post-box">
+                <h4 class="post-title">@post.Title</h4>
+                <p>@post.Content</p>
+            </div>
+        }
+    }
+</div>
