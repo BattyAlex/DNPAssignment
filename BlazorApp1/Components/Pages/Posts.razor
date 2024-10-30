@@ -7,39 +7,32 @@
 
 <h3>Write a post!</h3>
 <EditForm Model="@post" OnValidSubmit="HandleSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
 
     <div>
         <label>Title:</label>
-        <InputText @bind-Value="post.Title" />
+        <InputText @bind-Value="post.Title"/>
     </div>
     <div>
         <label>Content:</label>
-        <InputTextArea @bind-Value="post.Content" />
+        <InputTextArea @bind-Value="post.Content"/>
     </div>
     <button type="submit">Submit Post</button>
 </EditForm>
 
 @if (createdPost != null)
 {
-<p>Post created successfully! Title: @createdPost.Title</p>
+    <p>Post created successfully! Title: @createdPost.Title</p>
 }
 
 @code {
-private CreatePostDTO post = new CreatePostDTO();
-private CompletePostDTO createdPost;
+    private CreatePostDTO post = new CreatePostDTO();
+    private CompletePostDTO createdPost;
 
-private async Task HandleSubmit()
-{
-try
-{
-createdPost = await IPostService.AddPostAsync(post);
-Console.WriteLine("Post created successfully!");
-}
-catch (Exception ex)
-{
-Console.WriteLine($"Error: {ex.Message}");
-}
-}
+    private async Task HandleSubmit()
+    {
+        HandleSubmit();
+    }
+
 }

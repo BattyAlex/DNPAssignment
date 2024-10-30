@@ -5,17 +5,18 @@ namespace BlazorApp1.Services;
 
 public class HttpCommentService : ICommentService
 {
-    private readonly HttpClient client;
+    private readonly HttpClient _httpClient ;
 
     private HttpCommentService(HttpClient httpClient)
     {
-        this.client = client;
+       
+        this._httpClient = httpClient;
     }
 
     public async Task<CommentDTO> AddCommentAsync(CreateCommentDto request)
     {
         HttpResponseMessage httpResponse =
-            await client.PostAsJsonAsync("comments", request);
+            await _httpClient.PostAsJsonAsync("comments", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -33,7 +34,7 @@ public class HttpCommentService : ICommentService
         ReplaceCommentDTO request)
     {
         HttpResponseMessage response =
-            await client.PutAsJsonAsync($"comments/{id}", request);
+            await _httpClient.PutAsJsonAsync($"comments/{id}", request);
         string responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -45,7 +46,7 @@ public class HttpCommentService : ICommentService
     public async Task DeleteCommentAsync(int id)
     {
         HttpResponseMessage response =
-            await client.DeleteAsync($"comments/{id}");
+            await _httpClient.DeleteAsync($"comments/{id}");
         string responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -56,7 +57,7 @@ public class HttpCommentService : ICommentService
 
     public async Task<CommentDTO> GetCommentByIdAsync(int id)
     {
-        HttpResponseMessage response = await client.GetAsync($"comments/{id}");
+        HttpResponseMessage response = await _httpClient.GetAsync($"comments/{id}");
         string responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -73,7 +74,7 @@ public class HttpCommentService : ICommentService
 
     public async Task<List<CommentDTO>> GetAllCommentsAsync()
     {
-        HttpResponseMessage response = await client.GetAsync("comments");
+        HttpResponseMessage response = await _httpClient.GetAsync("comments");
         string responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
