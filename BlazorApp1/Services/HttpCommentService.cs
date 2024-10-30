@@ -56,7 +56,7 @@ public class HttpCommentService : ICommentService
 
     public async Task<CommentDTO> GetCommentByIdAsync(int id)
     {
-        HttpResponseMessage response = await client.GetAsync($"users/{id}");
+        HttpResponseMessage response = await client.GetAsync($"comments/{id}");
         string responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -73,7 +73,7 @@ public class HttpCommentService : ICommentService
 
     public async Task<List<CommentDTO>> GetAllCommentsAsync()
     {
-        HttpResponseMessage response = await client.GetAsync("users");
+        HttpResponseMessage response = await client.GetAsync("comments");
         string responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
