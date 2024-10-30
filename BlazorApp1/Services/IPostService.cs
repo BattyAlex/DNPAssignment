@@ -13,4 +13,6 @@ public interface IPostService
         public Task<List<CompletePostDTO>> GetPostsAsync();
     
     }
+
+   
 }
