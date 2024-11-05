@@ -1,0 +1,48 @@
+﻿@page "/User"
+<PageTitle>User</PageTitle>
+
+    @if (isLoggedIn)
+    {
+        <h3>Welcome to Reddat, @username!</h3>
+        <p>Start browsing.</p>
+    }
+    else
+    {
+        <h5>Welcome to Reddat!</h5>
+        <h7>@error</h7>
+    }
+
+    @code {
+    private string username;
+    private string password;
+    private bool isLoggedIn;
+    private User user;
+    private string error = "Please log in to access content.";
+
+    private void HandleLogin(string Username, string Password)
+    {
+        if (!string.IsNullOrEmpty(Username) && Password == "password") 
+        {
+            username = Username;
+            isLoggedIn = true;
+        }
+        else
+        {
+            isLoggedIn = false;
+            error = "Login failed.";
+            Console.WriteLine("Login failed.");
+        }
+    }
+
+        private async Task TriggerLogin()
+        {
+            HandleLogin(username, password);
+        }
+        
+    }
+    
+    <div class="nav-item px-3">
+        <input type="text" class="form-control my-2" placeholder="Username" @bind="username" />
+        <input type="password" class="form-control my-2" placeholder="Password" @bind="password"/>
+        <button class="btn btn-primary w-100" @onclick="TriggerLogin">Login</button>
+    </div>
