@@ -59,7 +59,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider
         {
             userAsJson = await jsRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
         }
-        catch (InvalidOperationException e)
+        catch (InvalidOperationException exception)
         {
             return new AuthenticationState(new());
         }
