@@ -1,9 +1,10 @@
 ﻿@page "/Posts"
+@page "/post"
 @using BlazorApp1.Services
 @using DataTransferObjects
 @using Microsoft.AspNetCore.Authorization
-
-@page "/post"
+@inject IPostService PostService
+@inject ICommentService CommentService
 <PageTitle>Post</PageTitle>
 
 <h3>Write a Post!</h3>
@@ -19,17 +20,38 @@
     private string content;
     private string author;
     private string commentText;
-    private (string Title, string Content, string Author, List<string> Comments)? selectedPost;
-    
-    private List<(string Title, string Content, string Author, List<string> Comments)> posts 
-        = new List<(string Title, string Content, string Author, List<string> Comments)>();
+    private string commenter;
+    private CompletePostDTO? selectedPost;
 
-    private void HandleSubmit(string Title, string Content, string Author)
+    private List<CompletePostDTO> posts
+        = new ();
+
+    protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Content) && !string.IsNullOrEmpty(Author)) 
+        await LoadPosts();
+    }
+
+    private async Task LoadPosts()
+    {
+        List<CompletePostDTO> fetchedPosts = await PostService.GetPostsAsync();
+        posts = fetchedPosts;
+            
+    }
+
+
+    private async Task HandleSubmit()
+    {
+        if (!string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(content) && !string.IsNullOrEmpty(author))
         {
-            posts.Add((Title, Content, Author, new List<string>()));
-            post = Title;
+            var newPost = new CreatePostDTO
+            {
+                Title = title,
+                Content = content,
+                Author = author
+            };
+            CompletePostDTO createdPost = await PostService.AddPostAsync(newPost);
+            posts.Add(createdPost);
+            post = title;
             title = string.Empty;
             content = string.Empty;
             author = string.Empty;
@@ -40,41 +62,55 @@
         }
     }
 
+
     private async Task TriggerSubmit()
     {
-        HandleSubmit(title, content, author);
+        await HandleSubmit();
     }
 
-    private void ShowPostDetails((string Title, string Content, string Author, List<string> Comments) post)
+    private void ShowPostDetails(CompletePostDTO post)
     {
         selectedPost = post;
     }
 
-    private void AddComment()
+    private async Task AddComment()
     {
-        if (!string.IsNullOrEmpty(commentText) && selectedPost != null)
+        if (!string.IsNullOrEmpty(commentText) && !string.IsNullOrEmpty(commenter) && selectedPost != null)
         {
-            selectedPost.Value.Comments.Add(commentText);
+            var newComment = new CreateCommentDto
+            {
+                CommentBody = commentText,
+                Commenter = commenter,
+                PostId = selectedPost.Id
+            };
+            CommentDTO createdComment = await CommentService.AddCommentAsync(newComment);
+            selectedPost.Comments.Add(createdComment);
             commentText = string.Empty;
+            commenter = string.Empty;
         }
     }
+
+}
+
 }
 
 <div>
     <label>Title:</label>
-    <InputText @bind-Value="title" />
+    <InputText @bind-Value="title"/>
 </div>
 <div>
     <label>Content:</label>
-    <InputTextArea @bind-Value="content" />
+    <InputTextArea @bind-Value="content"/>
 </div>
 <div>
     <label>Author:</label>
-    <InputText @bind-Value="author" />
+    <InputText @bind-Value="author"/>
 </div>
 <button class="btn btn-primary w-100" @onclick="TriggerSubmit">Create Post</button>
 
-<h4><strong>View Posts</strong></h4>
+<h4>
+    <strong>View Posts</strong>
+</h4>
 <div>
     @if (posts.Count == 0)
     {
@@ -82,7 +118,7 @@
     }
     else
     {
-        @foreach (var post in posts)
+        @foreach (CompletePostDTO post in posts)
         {
             <div class="post-box" @onclick="() => ShowPostDetails(post)">
                 <h8 class="post-title">@post.Title</h8>
@@ -95,20 +131,30 @@
 @if (selectedPost != null)
 {
     <div class="post-details">
-        <h8><strong>Post Details</strong></h8>
-        <p><strong>Title:</strong> @selectedPost.Value.Title</p>
-        <p><strong>Content:</strong> @selectedPost.Value.Content</p>
-        <p><strong>Author:</strong> @selectedPost.Value.Author</p>
+        <h8>
+            <strong>Post Details</strong>
+        </h8>
+        <p>
+            <strong>Title:</strong> @selectedPost.Title
+        </p>
+        <p>
+            <strong>Content:</strong> @selectedPost.Content
+        </p>
+        <p>
+            <strong>Author:</strong> @selectedPost.Author
+        </p>
 
-        <h4><strong>Comments</strong></h4>
-        @if (selectedPost.Value.Comments.Count == 0)
+        <h4>
+            <strong>Comments</strong>
+        </h4>
+        @if (selectedPost.Comments.Count == 0)
         {
             <p>No comments yet.</p>
         }
         else
         {
             <ul>
-                @foreach (var comment in selectedPost.Value.Comments)
+                @foreach (var comment in selectedPost.Comments)
                 {
                     <li>@comment</li>
                 }
@@ -117,7 +163,7 @@
 
         <div>
             <label>Add a comment:</label>
-            <InputText @bind-Value="commentText" />
+            <InputText @bind-Value="commentText"/>
             <button class="btn btn-secondary" @onclick="AddComment">Add Comment</button>
         </div>
     </div>

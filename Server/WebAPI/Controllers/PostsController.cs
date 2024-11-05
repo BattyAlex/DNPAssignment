@@ -14,7 +14,8 @@ public class PostsController
     private readonly IUserRepository userRepository;
     private readonly ICommentRepository commentRepository;
 
-    public PostsController(IPostRepository postRepository, IUserRepository userRepository, ICommentRepository commentRepository)
+    public PostsController(IPostRepository postRepository,
+        IUserRepository userRepository, ICommentRepository commentRepository)
     {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
@@ -32,18 +33,19 @@ public class PostsController
         else
         {
             Post newPost = new Post()
-                    {
-                        Title = post.Title,
-                        Content = post.Content,
-                        UserID = author.Id
-                    };
-                    await postRepository.AddPostAsync(newPost);
-                    return Results.Created($"/Posts/{newPost.ID}", newPost);
+            {
+                Title = post.Title,
+                Content = post.Content,
+                UserID = author.Id
+            };
+            await postRepository.AddPostAsync(newPost);
+            return Results.Created($"/Posts/{newPost.ID}", newPost);
         }
     }
 
     [HttpPut]
-    public async Task<IResult> UpdatePost([FromRoute] int id, [FromBody] ReplacePostDTO request)
+    public async Task<IResult> UpdatePost([FromRoute] int id,
+        [FromBody] ReplacePostDTO request)
     {
         try
         {
@@ -68,7 +70,8 @@ public class PostsController
     }
 
     [HttpGet("{id}")]
-    public async Task<IResult> GetSinglePost([FromRoute] int id, [FromQuery] bool includeAuthor, [FromQuery] bool includeComments) 
+    public async Task<IResult> GetSinglePost([FromRoute] int id,
+        [FromQuery] bool includeAuthor, [FromQuery] bool includeComments)
     {
         try
         {
@@ -77,10 +80,12 @@ public class PostsController
             {
                 Title = post.Title,
                 Content = post.Content,
+                Id = post.ID
             };
             if (includeAuthor)
             {
-                User author = await userRepository.GetSingleUserAsync(post.UserID);
+                User author =
+                    await userRepository.GetSingleUserAsync(post.UserID);
                 result.Author = author.Name;
             }
 
@@ -92,7 +97,8 @@ public class PostsController
                 {
                     if (comment.PostId == id)
                     {
-                        User commenter = userRepository.GetSingleUserAsync(comment.UserId).Result;
+                        User commenter = userRepository
+                            .GetSingleUserAsync(comment.UserId).Result;
                         CommentDTO com = new()
                         {
                             CommentBody = comment.CommentBody,
@@ -101,8 +107,10 @@ public class PostsController
                         commentsForPost.Add(com);
                     }
                 }
+
                 result.Comments = commentsForPost;
             }
+
             return Results.Ok(result);
         }
         catch (Exception e)
@@ -113,19 +121,29 @@ public class PostsController
     }
 
     [HttpGet]
-        public IResult GetManyPosts([FromQuery] string? nameContains, [FromQuery] int? writtenBy)
+    public IResult GetManyPosts([FromQuery] string? nameContains,
+        [FromQuery] int? writtenBy)
+    {
+        List<Post> posts = postRepository.GetMultiplePosts().ToList();
+        if (!string.IsNullOrWhiteSpace(nameContains))
         {
-            List<Post> posts = postRepository.GetMultiplePosts().ToList();
-            if (!string.IsNullOrWhiteSpace(nameContains))
-            {
-                posts = posts.Where(p => p.Title.ToLower().Contains(nameContains.ToLower())).ToList();
-            }
-            if (writtenBy.HasValue)
-            {
-                posts = posts.Where(p => p.UserID == writtenBy).ToList();
-            }
-            return Results.Ok(posts);
+            posts = posts
+                .Where(p => p.Title.ToLower().Contains(nameContains.ToLower()))
+                .ToList();
         }
+
+        if (writtenBy.HasValue)
+        {
+            posts = posts.Where(p => p.UserID == writtenBy).ToList();
+        }
+
+        return Results.Ok(posts.Select(post => new CompletePostDTO()
+        {
+            Id = post.ID,
+            Content = post.Content,
+            Title = post.Title,
+        }));
+    }
 
     private User GetUserByName(string userName)
     {
@@ -137,6 +155,7 @@ public class PostsController
                 return user;
             }
         }
+
         return null;
     }
 }
