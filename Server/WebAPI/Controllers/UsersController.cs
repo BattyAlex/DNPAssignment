@@ -109,7 +109,13 @@ public class UsersController : ControllerBase
             {
                 users = users.Where(u => u.Name.Contains(nameContains)).ToList();
             }
-            return Results.Ok(users);
+
+            IEnumerable<UserDTO> userDtos = users.Select(user => new UserDTO
+            {
+                    Username = user.Name,
+                    Id = user.Id
+            });
+            return Results.Ok(userDtos);
         }
         catch (Exception e)
         {

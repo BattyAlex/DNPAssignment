@@ -1,4 +1,5 @@
-﻿using DataTransferObjects;
+﻿/*
+using DataTransferObjects;
 using Entities;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -39,4 +40,5 @@ public class AuthController : ControllerBase
         return Ok(usetdto fix this);
     }
 }
+*/
     

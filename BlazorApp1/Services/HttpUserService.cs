@@ -48,7 +48,7 @@ public class HttpUserService:IUserService
             throw new Exception(responseString);
         }
     }
-    public async Task<User> GetUserAsync(int id)
+    public async Task<UserDTO> GetUserAsync(int id)
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"users/{id}");
         string responseString = await response.Content.ReadAsStringAsync();
@@ -58,12 +58,12 @@ public class HttpUserService:IUserService
             throw new Exception(responseString);
         }
 
-        return JsonSerializer.Deserialize<User>(responseString, new JsonSerializerOptions
+        return JsonSerializer.Deserialize<UserDTO>(responseString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;
     }
-    public async Task<List<UserDTO>> GetUsersAsync()
+    public async Task<IEnumerable<UserDTO>> GetUsersAsync()
     {
         HttpResponseMessage response = await _httpClient.GetAsync("users");
         string responseString = await response.Content.ReadAsStringAsync();
@@ -73,7 +73,7 @@ public class HttpUserService:IUserService
             throw new Exception(responseString);
         }
 
-        return JsonSerializer.Deserialize<List<UserDTO>>(responseString, new JsonSerializerOptions
+        return JsonSerializer.Deserialize<IEnumerable<UserDTO>>(responseString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;

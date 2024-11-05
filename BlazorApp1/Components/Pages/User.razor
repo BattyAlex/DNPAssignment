@@ -29,32 +29,41 @@ else
     private string password;
     private bool isLoggedIn;
     private User user;
-    
+
     private string error = "Please log in to access content.";
 
-    private async Task HandleLogin(string Username, string Password)
+    private async Task HandleLoginAsync(string Username, string Password)
     {
-        List<UserDTO> users = await UserService.GetUsersAsync();
-        
+        Console.WriteLine("hi");
+        IEnumerable<UserDTO> users = await UserService.GetUsersAsync();
+        Console.WriteLine("hi2");
         if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
         {
-            User? userLoggingIn = null;
+            Console.WriteLine("username is null");
+            UserDTO? userLoggingIn = null;
             foreach (UserDTO user in users)
             {
                 if (user.Username.Equals((Username)))
                 {
-                    userLoggingIn = UserService.GetUserAsync(user.Id).Result;
+                    Console.WriteLine("print");
+                    userLoggingIn = await UserService.GetUserAsync(user.Id);
                 }
             }
+
+            Console.WriteLine(userLoggingIn);
             if (userLoggingIn == null)
             {
                 error = "User does not exist.";
                 isLoggedIn = false;
             }
-            if (userLoggingIn.username.Equals(Username) && userLoggingIn.password.Equals(Password))
+            else if (userLoggingIn.Username.Equals(Username))
             {
                 username = Username;
                 isLoggedIn = true;
+            }
+            else
+            {
+                error = "Username or password does not match.";
             }
         }
         else
@@ -67,7 +76,7 @@ else
 
     private async Task TriggerLogin()
     {
-        HandleLogin(username, password);
+        await HandleLoginAsync(username, password);
     }
 
 }
