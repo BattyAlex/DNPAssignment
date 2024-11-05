@@ -1,5 +1,7 @@
 ﻿using DataTransferObjects;
 using Entities;
+
+using DataTransferObjects;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryContracts;
@@ -36,7 +38,12 @@ public class AuthController : ControllerBase
         {
             return Unauthorized("Invalid password.");
         }
-        return Ok("Login successful!");
+        UserDTO dto = new()
+        {
+            Id = user.Id,
+            Username = user.Name
+        };
+        return Ok(dto);
     }
 }
     
