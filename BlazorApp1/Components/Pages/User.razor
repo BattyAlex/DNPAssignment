@@ -34,7 +34,6 @@ else
 
     private async Task HandleLoginAsync(string Username, string Password)
     {
-        Console.WriteLine("hi");
         IEnumerable<UserDTO> users = await UserService.GetUsersAsync();
         if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
         {
