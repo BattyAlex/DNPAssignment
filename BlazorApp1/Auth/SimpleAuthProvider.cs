@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿/*using System.Security.Claims;
 using System.Text.Json;
 using DataTransferObjects;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -45,4 +45,4 @@ public class SimpleAuthProvider : AuthenticationStateProvider
         throw new NotImplementedException(); 
         
     } 
-}
+}*/

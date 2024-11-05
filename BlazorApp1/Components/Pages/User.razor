@@ -1,30 +1,57 @@
 ﻿@page "/User"
+@using BlazorApp1.Services
+@using DataTransferObjects
 <PageTitle>User</PageTitle>
 
-    @if (isLoggedIn)
-    {
-        <h3>Welcome to Reddat, @username!</h3>
-        <p>Start browsing.</p>
-    }
-    else
-    {
-        <h5>Welcome to Reddat!</h5>
-        <h7>@error</h7>
-    }
+@if (isLoggedIn)
+{
+    <h3>Welcome to Reddat, @username!</h3>
+    <p>Start browsing.</p>
+}
+else
+{
+    <h5>Welcome to Reddat!</h5>
+    <h7>@error</h7>
+}
 
-    @code {
+
+<div class="nav-item px-3">
+    <input type="text" class="form-control my-2" placeholder="Username" @bind="username"/>
+    <input type="password" class="form-control my-2" placeholder="Password" @bind="password"/>
+    <button class="btn btn-primary w-100" @onclick="TriggerLogin">Login</button>
+</div>
+
+@code {
     private string username;
     private string password;
     private bool isLoggedIn;
     private User user;
+    private IUserService userService = new HttpUserService(new HttpClient());
     private string error = "Please log in to access content.";
 
     private void HandleLogin(string Username, string Password)
     {
-        if (!string.IsNullOrEmpty(Username) && Password == "password") 
+        List<UserDTO> users = userService.GetUsersAsync().Result;
+        if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
         {
-            username = Username;
-            isLoggedIn = true;
+            User? userLoggingIn = null;
+            foreach (UserDTO user in users)
+            {
+                if (user.Username.Equals((Username)))
+                {
+                    userLoggingIn = userService.GetUserAsync(user.Id).Result;
+                }
+            }
+            if (userLoggingIn == null)
+            {
+                error = "User does not exist.";
+                isLoggedIn = false;
+            }
+            if (userLoggingIn.username.Equals(Username) && userLoggingIn.password.Equals(Password))
+            {
+                username = Username;
+                isLoggedIn = true;
+            }
         }
         else
         {
@@ -34,15 +61,9 @@
         }
     }
 
-        private async Task TriggerLogin()
-        {
-            HandleLogin(username, password);
-        }
-        
+    private async Task TriggerLogin()
+    {
+        HandleLogin(username, password);
     }
-    
-    <div class="nav-item px-3">
-        <input type="text" class="form-control my-2" placeholder="Username" @bind="username" />
-        <input type="password" class="form-control my-2" placeholder="Password" @bind="password"/>
-        <button class="btn btn-primary w-100" @onclick="TriggerLogin">Login</button>
-    </div>
+
+}

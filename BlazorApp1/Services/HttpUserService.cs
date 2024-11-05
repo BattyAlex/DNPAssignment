@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using BlazorApp1.Components.Pages;
 using DataTransferObjects;
 
 namespace BlazorApp1.Services;
@@ -47,7 +48,7 @@ public class HttpUserService:IUserService
             throw new Exception(responseString);
         }
     }
-    public async Task<UserDTO> GetUserAsync(int id)
+    public async Task<User> GetUserAsync(int id)
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"users/{id}");
         string responseString = await response.Content.ReadAsStringAsync();
@@ -57,7 +58,7 @@ public class HttpUserService:IUserService
             throw new Exception(responseString);
         }
 
-        return JsonSerializer.Deserialize<UserDTO>(responseString, new JsonSerializerOptions
+        return JsonSerializer.Deserialize<User>(responseString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;
