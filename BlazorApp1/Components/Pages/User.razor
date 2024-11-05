@@ -36,21 +36,16 @@ else
     {
         Console.WriteLine("hi");
         IEnumerable<UserDTO> users = await UserService.GetUsersAsync();
-        Console.WriteLine("hi2");
         if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
         {
-            Console.WriteLine("username is null");
             UserDTO? userLoggingIn = null;
             foreach (UserDTO user in users)
             {
                 if (user.Username.Equals((Username)))
                 {
-                    Console.WriteLine("print");
                     userLoggingIn = await UserService.GetUserAsync(user.Id);
                 }
             }
-
-            Console.WriteLine(userLoggingIn);
             if (userLoggingIn == null)
             {
                 error = "User does not exist.";
