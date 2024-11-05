@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
         {
             return Unauthorized("Username and password are required.");
         }
-      var user = _userRepository
+      User? user = _userRepository
             .GetManyUsersAsync()
             .SingleOrDefault(u => u.Name.Equals(loginRequest.username));
         

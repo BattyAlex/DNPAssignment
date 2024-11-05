@@ -1,6 +1,9 @@
 ﻿@page "/User"
 @using BlazorApp1.Services
 @using DataTransferObjects
+
+@inject  IUserService UserService
+
 <PageTitle>User</PageTitle>
 
 @if (isLoggedIn)
@@ -26,12 +29,13 @@ else
     private string password;
     private bool isLoggedIn;
     private User user;
-    private IUserService userService = new HttpUserService(new HttpClient());
+    
     private string error = "Please log in to access content.";
 
-    private void HandleLogin(string Username, string Password)
+    private async Task HandleLogin(string Username, string Password)
     {
-        List<UserDTO> users = userService.GetUsersAsync().Result;
+        List<UserDTO> users = await UserService.GetUsersAsync();
+        
         if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
         {
             User? userLoggingIn = null;
@@ -39,7 +43,7 @@ else
             {
                 if (user.Username.Equals((Username)))
                 {
-                    userLoggingIn = userService.GetUserAsync(user.Id).Result;
+                    userLoggingIn = UserService.GetUserAsync(user.Id).Result;
                 }
             }
             if (userLoggingIn == null)
