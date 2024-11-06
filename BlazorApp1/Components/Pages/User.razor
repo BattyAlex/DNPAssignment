@@ -38,7 +38,7 @@
         try
         {
             await ((SimpleAuthProvider)AuthProvider).Login(username, password);
-            navMgr.NavigateTo("/User");
+            navMgr.NavigateTo("/Home");
         }
         catch (Exception e)
         {
