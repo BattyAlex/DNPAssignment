@@ -34,7 +34,16 @@ else
 
     private async Task HandleLoginAsync(string Username, string Password)
     {
-        IEnumerable<UserDTO> users = await UserService.GetUsersAsync();
+        IEnumerable<UserDTO> users = new List<UserDTO>();
+        try
+        {
+            users = await UserService.GetUsersAsync();
+        }
+        catch (Exception e)
+        {
+            error = "Error occured:" + e.Message;
+        }
+        
         if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
         {
             UserDTO? userLoggingIn = null;
