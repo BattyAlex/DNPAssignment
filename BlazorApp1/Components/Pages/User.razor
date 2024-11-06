@@ -1,85 +1,51 @@
 ﻿@page "/User"
+@using BlazorApp1.Auth
 @using BlazorApp1.Services
 @using DataTransferObjects
-
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager navMgr
 @inject  IUserService UserService
 
 <PageTitle>User</PageTitle>
 
-@if (isLoggedIn)
-{
-    <h3>Welcome to Reddat, @username!</h3>
-    <p>Start browsing.</p>
-}
-else
-{
-    <h5>Welcome to Reddat!</h5>
-    <h7>@error</h7>
-}
-
-
-<div class="nav-item px-3">
-    <input type="text" class="form-control my-2" placeholder="Username" @bind="username"/>
-    <input type="password" class="form-control my-2" placeholder="Password" @bind="password"/>
-    <button class="btn btn-primary w-100" @onclick="TriggerLogin">Login</button>
-</div>
+<AuthorizeView>
+    
+    <NotAuthorized>
+        <h3>Please login</h3>
+        <label>User name:</label>
+        <input type="text" @bind="username"/>
+        <label>Password:</label> 
+        <input type="password" @bind="password"/>
+        @if (!string.IsNullOrEmpty(errorLabel))
+        {
+            <label style="color: red"> @errorLabel </label>
+        }
+        <button @onclick="HandleLoginAsync">Log in</button> </NotAuthorized>
+    <Authorized>
+        <h3>Hello, @context.User.Identity.Name</h3> </Authorized>
+</AuthorizeView>
 
 @code {
     private string username;
     private string password;
-    private bool isLoggedIn;
-    private User user;
+    private string errorLabel;
 
     private string error = "Please log in to access content.";
 
-    private async Task HandleLoginAsync(string Username, string Password)
+    private async Task HandleLoginAsync()
     {
-        IEnumerable<UserDTO> users = new List<UserDTO>();
+        errorLabel = "";
         try
         {
-            users = await UserService.GetUsersAsync();
+            await ((SimpleAuthProvider)AuthProvider).Login(username, password);
+            navMgr.NavigateTo("/Users");
         }
         catch (Exception e)
         {
-            error = "Error occured:" + e.Message;
+            Console.WriteLine(e);
+            errorLabel = $"Error: {e.Message}";
         }
-        
-        if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
-        {
-            UserDTO? userLoggingIn = null;
-            foreach (UserDTO user in users)
-            {
-                if (user.Username.Equals((Username)))
-                {
-                    userLoggingIn = await UserService.GetUserAsync(user.Id);
-                }
-            }
-            if (userLoggingIn == null)
-            {
-                error = "User does not exist.";
-                isLoggedIn = false;
-            }
-            else if (userLoggingIn.Username.Equals(Username))
-            {
-                username = Username;
-                isLoggedIn = true;
-            }
-            else
-            {
-                error = "Username or password does not match.";
-            }
-        }
-        else
-        {
-            isLoggedIn = false;
-            error = "Login failed.";
-            Console.WriteLine("Login failed.");
-        }
-    }
-
-    private async Task TriggerLogin()
-    {
-        await HandleLoginAsync(username, password);
     }
 
 }
+

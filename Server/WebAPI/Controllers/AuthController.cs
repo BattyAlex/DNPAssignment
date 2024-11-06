@@ -1,4 +1,4 @@
-﻿/*
+﻿
 using DataTransferObjects;
 using Entities;
 
@@ -47,5 +47,5 @@ public class AuthController : ControllerBase
         return Ok(dto);
     }
 }
-*/
+
     
