@@ -32,14 +32,20 @@ public class PostsController
         }
         else
         {
-            Post newPost = new Post()
+            Post newPost = await postRepository.AddPostAsync(new()
             {
                 Title = post.Title,
                 Content = post.Content,
                 UserID = author.Id
+            });
+            CompletePostDTO created = new()
+            {
+                Id = newPost.ID,
+                Title = newPost.Title,
+                Content = newPost.Content,
+                Author = userRepository.GetSingleUserAsync(newPost.UserID).Result.Name
             };
-            await postRepository.AddPostAsync(newPost);
-            return Results.Created($"/Posts/{newPost.ID}", newPost);
+            return Results.Created($"/Posts/{newPost.ID}", created);
         }
     }
 
@@ -62,10 +68,15 @@ public class PostsController
         }
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IResult> DeletePost([FromRoute] int id)
     {
         await postRepository.DeletePostAsync(id);
+        List<CommentDTO> comments = GetCommentsForPost(id);
+        foreach (CommentDTO comment in comments)
+        {
+            await commentRepository.DeleteCommentAsync(comment.CommentId);
+        }
         return Results.NoContent();
     }
 
@@ -91,24 +102,7 @@ public class PostsController
 
             if (includeComments)
             {
-                List<CommentDTO> commentsForPost = new List<CommentDTO>();
-                List<Comment> comments = commentRepository.GetAll().ToList();
-                foreach (Comment comment in comments)
-                {
-                    if (comment.PostId == id)
-                    {
-                        User commenter = userRepository
-                            .GetSingleUserAsync(comment.UserId).Result;
-                        CommentDTO com = new()
-                        {
-                            CommentBody = comment.CommentBody,
-                            Commenter = commenter.Name
-                        };
-                        commentsForPost.Add(com);
-                    }
-                }
-
-                result.Comments = commentsForPost;
+                result.Comments = GetCommentsForPost(result.Id);
             }
 
             return Results.Ok(result);
@@ -142,6 +136,8 @@ public class PostsController
             Id = post.ID,
             Content = post.Content,
             Title = post.Title,
+            Author = userRepository.GetSingleUserAsync(post.UserID).Result.Name,
+            Comments = GetCommentsForPost(post.ID)
         }));
     }
 
@@ -157,5 +153,27 @@ public class PostsController
         }
 
         return null;
+    }
+
+    private List<CommentDTO> GetCommentsForPost(int postId)
+    {
+        List<CommentDTO> commentsForPost = new List<CommentDTO>();
+        List<Comment> comments = commentRepository.GetAll().ToList();
+        foreach (Comment comment in comments)
+        {
+            if (comment.PostId == postId)
+            {
+                User commenter = userRepository
+                    .GetSingleUserAsync(comment.UserId).Result;
+                CommentDTO com = new()
+                {
+                    CommentId = comment.Id,
+                    CommentBody = comment.CommentBody,
+                    Commenter = commenter.Name
+                };
+                commentsForPost.Add(com);
+            }
+        }
+        return commentsForPost;
     }
 }
