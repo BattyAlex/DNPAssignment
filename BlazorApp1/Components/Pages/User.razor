@@ -9,20 +9,22 @@
 <PageTitle>User</PageTitle>
 
 <AuthorizeView>
-    
+
     <NotAuthorized>
         <h3>Please login</h3>
         <label>User name:</label>
         <input type="text" @bind="username"/>
-        <label>Password:</label> 
+        <label>Password:</label>
         <input type="password" @bind="password"/>
         @if (!string.IsNullOrEmpty(errorLabel))
         {
             <label style="color: red"> @errorLabel </label>
         }
-        <button @onclick="HandleLoginAsync">Log in</button> </NotAuthorized>
+        <button @onclick="HandleLoginAsync">Log in</button>
+    </NotAuthorized>
     <Authorized>
-        <h3>Hello, @context.User.Identity.Name</h3> </Authorized>
+        <h3>Hello, @context.User.Identity.Name</h3>
+    </Authorized>
 </AuthorizeView>
 
 @code {
@@ -48,4 +50,3 @@
     }
 
 }
-

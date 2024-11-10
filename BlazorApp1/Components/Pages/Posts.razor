@@ -1,20 +1,16 @@
-﻿@page "/MustBeLoggedInToView"
-@attribute [Authorize]
-<h3>Must be logged in to view</h3>
-<p>You can only access this page if you're logged in.</p>
-@page "/Posts"
-@page "/post"
+﻿@page "/Posts"
 @using System.Security.Claims
 @using BlazorApp1.Services
 @using DataTransferObjects
-@using Microsoft.AspNetCore.Authorization
 @inject IPostService PostService
 @inject ICommentService CommentService
+
 <PageTitle>Post</PageTitle>
+
 <AuthorizeView>
     <Authorized>
         <h3>Hello @context.User.Identity.Name</h3>
-        <p>
+        @*<p>
             @context.User.Claims.First(claim => claim.Type.Equals(ClaimTypes.Role)).Value
         </p>
         <p>
@@ -23,19 +19,20 @@
                 @foreach (Claim claim in context.User.Claims)
                 {
                     <li>
-                        <label>@claim.Type: @claim.Value
+                        <label>
+                            @claim.Type: @claim.Value
                         </label>
                     </li>
                 }
             </ol>
-        </p>
+        </p>*@
+        <h3>Write a Post!</h3>
     </Authorized>
     <NotAuthorized>
         <p>You are not logged in</p>
     </NotAuthorized>
 </AuthorizeView>
-<h3>Write a Post!</h3>
-
+@*
 @if (!string.IsNullOrEmpty(post))
 {
     <p>Post created successfully! Title: @post</p>
@@ -53,19 +50,20 @@
     private CompletePostDTO? selectedPost;
 
     private List<CompletePostDTO> posts
-        = new ();
+        = new();
 
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authenticationState = await State;
-        ClaimsPrincipal claimsPrincipal = authenticationState.User; 
-        if(claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated) 
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
         {
             // the user is not logged in
-            return; 
+            return;
         }
+
         string? userName = claimsPrincipal.Identity?.Name;
-        
+
         IEnumerable<Claim> claims = claimsPrincipal.Claims;
         string userIdAsString = claims.Single(c => c.Type == "Id").Value;
         userId = int.Parse(userIdAsString);
@@ -76,7 +74,6 @@
     {
         List<CompletePostDTO> fetchedPosts = await PostService.GetPostsAsync();
         posts = fetchedPosts;
-            
     }
 
 
@@ -208,4 +205,4 @@
             <button class="btn btn-secondary" @onclick="AddComment">Add Comment</button>
         </div>
     </div>
-}
+}*@
