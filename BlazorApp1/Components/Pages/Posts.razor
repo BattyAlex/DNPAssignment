@@ -1,18 +1,20 @@
-﻿@page "/Posts"
+﻿@page "/MustBeLoggedInToView"
 @attribute [Authorize]
+<h3>Must be logged in to view</h3>
+<p>You can only access this page if you're logged in.</p>
+@page "/Posts"
+@page "/post"
 @using System.Security.Claims
 @using BlazorApp1.Services
 @using DataTransferObjects
-@inject AuthenticationStateProvider AuthProvider
+@using Microsoft.AspNetCore.Authorization
 @inject IPostService PostService
 @inject ICommentService CommentService
-
 <PageTitle>Post</PageTitle>
-
 <AuthorizeView>
     <Authorized>
         <h3>Hello @context.User.Identity.Name</h3>
-        @*<p>
+        <p>
             @context.User.Claims.First(claim => claim.Type.Equals(ClaimTypes.Role)).Value
         </p>
         <p>
@@ -27,85 +29,18 @@
                     </li>
                 }
             </ol>
-        </p>*@
-        <h3>Write a Post!</h3>
-        <div>
-            <label>Title:</label>
-            <InputText @bind-Value="title"/>
-        </div>
-        <div>
-            <label>Content:</label>
-            <InputTextArea @bind-Value="content"/>
-        </div>
-        <p>@commentCreated</p>
-        <button class="btn btn-primary w-100" @onclick="TriggerSubmit">Create Post</button>
-
-        <h4>
-            <strong>View Posts</strong>
-        </h4>
-        <div>
-            @if (posts.Count == 0)
-            {
-            <label>No posts to view</label>
-            }
-            else
-            {
-            @foreach (CompletePostDTO post in posts)
-            {
-            <div class="post-box" @onclick="() => ShowPostDetails(post)">
-                <h8 class="post-title">@post.Title</h8>
-                <p>by @post.Author</p>
-            </div>
-            }
-            }
-        </div>
-
-        @if (selectedPost != null)
-        {
-        <div class="post-details">
-            <h8>
-                <strong>Post Details</strong>
-            </h8>
-            <p>
-                <strong>Title:</strong> @selectedPost.Title
-            </p>
-            <p>
-                <strong>Content:</strong> @selectedPost.Content
-            </p>
-            <p>
-                <strong>Author:</strong> @selectedPost.Author
-            </p>
-
-            <h4>
-                <strong>Comments</strong>
-            </h4>
-            @if (selectedPost.Comments.Count == 0)
-            {
-            <p>No comments yet.</p>
-            }
-            else
-            {
-            <ul>
-                @foreach (var comment in selectedPost.Comments)
-                {
-                    <li>@comment.Commenter says:<br/>@comment.CommentBody</li>
-                    
-                }
-            </ul>
-            }
-
-            <div>
-                <label>Add a comment:</label>
-                <InputText @bind-Value="commentText"/>
-                <button class="btn btn-secondary" @onclick="AddComment">Add Comment</button>
-            </div>
-        </div>
-        }
+        </p>
     </Authorized>
     <NotAuthorized>
         <p>You are not logged in</p>
     </NotAuthorized>
 </AuthorizeView>
+<h3>Write a Post!</h3>
+
+@if (!string.IsNullOrEmpty(post))
+{
+    <p>Post created successfully! Title: @post</p>
+}
 
 @code {
     [CascadingParameter] public Task<AuthenticationState> State { get; set; }
@@ -113,10 +48,9 @@
     private int userId;
     private string title;
     private string content;
-    private string? author;
+    private string author;
     private string commentText;
     private string commenter;
-    private string commentCreated;
     private CompletePostDTO? selectedPost;
 
     private List<CompletePostDTO> posts
@@ -124,7 +58,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        commentCreated = "";
         AuthenticationState authenticationState = await State;
         ClaimsPrincipal claimsPrincipal = authenticationState.User;
         if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
@@ -133,10 +66,10 @@
             return;
         }
 
-        author = claimsPrincipal.Identity?.Name;
+        string? userName = claimsPrincipal.Identity?.Name;
 
         IEnumerable<Claim> claims = claimsPrincipal.Claims;
-        string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        string userIdAsString = claims.Single(c => c.Type == "Id").Value;
         userId = int.Parse(userIdAsString);
         await LoadPosts();
     }
@@ -150,9 +83,7 @@
 
     private async Task HandleSubmit()
     {
-        AuthenticationState authenticationState = await State;
-        ClaimsPrincipal claimsPrincipal = authenticationState.User;
-        if (!string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(content) && author is not null && claimsPrincipal.Identity is not null && claimsPrincipal.Identity.IsAuthenticated)
+        if (!string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(content) && !string.IsNullOrEmpty(author))
         {
             var newPost = new CreatePostDTO
             {
@@ -166,11 +97,10 @@
             title = string.Empty;
             content = string.Empty;
             author = string.Empty;
-            commentCreated = "Post created successfully! Title: " + title;
         }
         else
         {
-            commentCreated = "No fields should be empty.";
+            Console.WriteLine("No fields should be empty.");
         }
     }
 
@@ -187,14 +117,12 @@
 
     private async Task AddComment()
     {
-        AuthenticationState authenticationState = await State;
-        ClaimsPrincipal claimsPrincipal = authenticationState.User;
-        if (!string.IsNullOrEmpty(commentText) && !string.IsNullOrEmpty(author) && selectedPost != null  && claimsPrincipal.Identity is not null && claimsPrincipal.Identity.IsAuthenticated)
+        if (!string.IsNullOrEmpty(commentText) && !string.IsNullOrEmpty(commenter) && selectedPost != null)
         {
             var newComment = new CreateCommentDto
             {
                 CommentBody = commentText,
-                Commenter = author,
+                Commenter = commenter,
                 PostId = selectedPost.Id
             };
             CommentDTO createdComment = await CommentService.AddCommentAsync(newComment);
@@ -203,5 +131,82 @@
             commenter = string.Empty;
         }
     }
+
 }
 
+}
+
+<div>
+    <label>Title:</label>
+    <InputText @bind-Value="title"/>
+</div>
+<div>
+    <label>Content:</label>
+    <InputTextArea @bind-Value="content"/>
+</div>
+<div>
+    <label>Author:</label>
+    <InputText @bind-Value="author"/>
+</div>
+<button class="btn btn-primary w-100" @onclick="TriggerSubmit">Create Post</button>
+
+<h4>
+    <strong>View Posts</strong>
+</h4>
+<div>
+    @if (posts.Count == 0)
+    {
+        <label>No posts to view</label>
+    }
+    else
+    {
+        @foreach (CompletePostDTO post in posts)
+        {
+            <div class="post-box" @onclick="() => ShowPostDetails(post)">
+                <h8 class="post-title">@post.Title</h8>
+                <p>by @post.Author</p>
+            </div>
+        }
+    }
+</div>
+
+@if (selectedPost != null)
+{
+    <div class="post-details">
+        <h8>
+            <strong>Post Details</strong>
+        </h8>
+        <p>
+            <strong>Title:</strong> @selectedPost.Title
+        </p>
+        <p>
+            <strong>Content:</strong> @selectedPost.Content
+        </p>
+        <p>
+            <strong>Author:</strong> @selectedPost.Author
+        </p>
+
+        <h4>
+            <strong>Comments</strong>
+        </h4>
+        @if (selectedPost.Comments.Count == 0)
+        {
+            <p>No comments yet.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var comment in selectedPost.Comments)
+                {
+                    <li>@comment</li>
+                }
+            </ul>
+        }
+
+        <div>
+            <label>Add a comment:</label>
+            <InputText @bind-Value="commentText"/>
+            <button class="btn btn-secondary" @onclick="AddComment">Add Comment</button>
+        </div>
+    </div>
+}
