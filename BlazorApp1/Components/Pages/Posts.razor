@@ -187,12 +187,14 @@
 
     private async Task AddComment()
     {
-        if (!string.IsNullOrEmpty(commentText) && !string.IsNullOrEmpty(commenter) && selectedPost != null)
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (!string.IsNullOrEmpty(commentText) && !string.IsNullOrEmpty(author) && selectedPost != null  && claimsPrincipal.Identity is not null && claimsPrincipal.Identity.IsAuthenticated)
         {
             var newComment = new CreateCommentDto
             {
                 CommentBody = commentText,
-                Commenter = commenter,
+                Commenter = author,
                 PostId = selectedPost.Id
             };
             CommentDTO createdComment = await CommentService.AddCommentAsync(newComment);
