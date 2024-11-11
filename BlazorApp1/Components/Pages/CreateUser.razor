@@ -1,45 +1,44 @@
-﻿@page "/User"
-@using BlazorApp1.Auth
-@using BlazorApp1.Services
-@using DataTransferObjects
+﻿@page "/CreateUser"
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager navMgr
-@inject  IUserService UserService
+@using BlazorApp1.Auth
+@using BlazorApp1.Services
+<h3>CreateUser</h3>
 
-<PageTitle>User</PageTitle>
 
 <AuthorizeView>
 
     <NotAuthorized>
-        <h3>Please login</h3>
-        <label>User name:</label>
+        <h3>Please create your user profile</h3>
+        <label>Username:</label>
         <input type="text" @bind="username"/>
         <label>Password:</label>
         <input type="password" @bind="password"/>
+        
         @if (!string.IsNullOrEmpty(errorLabel))
         {
             <label style="color: red"> @errorLabel </label>
         }
-        <button @onclick="HandleLoginAsync">Log in</button>
+        <button @onclick="HandleCreateAsync">Create user</button>
     </NotAuthorized>
     <Authorized>
-        <h3>Hello, @context.User.Identity.Name</h3>
+        <h3>Welcome, @context.User.Identity.Name</h3>
     </Authorized>
 </AuthorizeView>
 
-@code {
+
+@code 
+{
     private string username;
     private string password;
     private string errorLabel;
-
-    private string error = "Please log in to access content.";
-
-    private async Task HandleLoginAsync()
+    
+    private async Task HandleCreateAsync()
     {
         errorLabel = "";
         try
         {
-            await ((SimpleAuthProvider)AuthProvider).Login(username, password);
+            await ((SimpleAuthProvider)AuthProvider).CreateUser(username, password);
             navMgr.NavigateTo("/");
         }
         catch (Exception e)
@@ -48,5 +47,5 @@
             errorLabel = $"Error: {e.Message}";
         }
     }
-
+    
 }

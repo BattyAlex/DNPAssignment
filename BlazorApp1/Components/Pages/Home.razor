@@ -10,7 +10,10 @@
         <h3>Hello, @context.User.Identity.Name</h3>
     </Authorized> 
     <NotAuthorized>
-         lol you are not logged in!
+        lol you are not logged in!
+        <button @onclick='() => NavMgr.NavigateTo("Login")'>go to login</button>
+        <button @onclick='() => NavMgr.NavigateTo("CreateUser")'>go to create user</button>
     </NotAuthorized>
 </AuthorizeView> 
-<button @onclick='() => NavMgr.NavigateTo("User")'>go to login</button>
+
+

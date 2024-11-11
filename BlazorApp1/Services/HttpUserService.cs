@@ -63,7 +63,7 @@ public class HttpUserService:IUserService
             PropertyNameCaseInsensitive = true
         })!;
     }
-    public async Task<IEnumerable<UserDTO>> GetUsersAsync()
+    public async Task<List<UserDTO>> GetUsersAsync()
     {
         HttpResponseMessage response = await _httpClient.GetAsync("users");
         string responseString = await response.Content.ReadAsStringAsync();
@@ -73,9 +73,21 @@ public class HttpUserService:IUserService
             throw new Exception(responseString);
         }
 
-        return JsonSerializer.Deserialize<IEnumerable<UserDTO>>(responseString, new JsonSerializerOptions
+        return JsonSerializer.Deserialize<List<UserDTO>>(responseString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;
+    }
+
+    public async Task<bool> UserExistsAsync(string username)
+    {
+        var users = await GetUsersAsync();
+
+        foreach (var VARIABLE in users)
+        {
+            if (VARIABLE.Username == username)
+                return true;
+        }
+        return false;
     }
 }

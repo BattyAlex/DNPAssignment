@@ -46,6 +46,30 @@ public class AuthController : ControllerBase
         };
         return Ok(dto);
     }
+
+    [HttpPost("createuser")]
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO createUser)
+    {
+        if (string.IsNullOrEmpty(createUser.Username) || string.IsNullOrEmpty(createUser.Password))
+        {
+            return Unauthorized("Username and password are required.");
+        }
+        User? user = _userRepository
+            .GetManyUsersAsync()
+            .SingleOrDefault(u => u.Name.Equals(createUser.Username));
+        if (user == null)
+        {
+            user = await _userRepository.AddUserAsync(new User(createUser.Username, createUser.Password));
+            UserDTO dto = new()
+            {
+                Id = user.Id,
+                Username = user.Name
+            };
+            
+            return Ok(dto);
+        }
+        return Unauthorized("Username already exists.");
+    }
 }
 
     
