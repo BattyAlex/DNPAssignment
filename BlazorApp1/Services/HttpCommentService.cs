@@ -20,7 +20,7 @@ public class HttpCommentService : ICommentService
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
-            throw new Exception(response);
+            throw new Exception(httpResponse.StatusCode.ToString());
         }
 
         return JsonSerializer.Deserialize<CommentDTO>(response,

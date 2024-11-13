@@ -98,6 +98,7 @@
                 <label>Add a comment:</label>
                 <InputText @bind-Value="commentText"/>
                 <button class="btn btn-secondary" @onclick="AddComment">Add Comment</button>
+                <p>@errorMessage</p>
             </div>
         </div>
         }
@@ -117,6 +118,7 @@
     private string commentText;
     private string commenter;
     private string commentCreated;
+    private string errorMessage;
     private CompletePostDTO? selectedPost;
 
     private List<CompletePostDTO> posts
@@ -125,6 +127,7 @@
     protected override async Task OnInitializedAsync()
     {
         commentCreated = "";
+        errorMessage = "";
         AuthenticationState authenticationState = await State;
         ClaimsPrincipal claimsPrincipal = authenticationState.User;
         if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
@@ -197,10 +200,18 @@
                 Commenter = author,
                 PostId = selectedPost.Id
             };
-            CommentDTO createdComment = await CommentService.AddCommentAsync(newComment);
-            selectedPost.Comments.Add(createdComment);
-            commentText = string.Empty;
-            commenter = string.Empty;
+            try
+            {
+                CommentDTO createdComment = await CommentService.AddCommentAsync(newComment);
+                selectedPost.Comments.Add(createdComment);
+                commentText = string.Empty;
+                commenter = string.Empty;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                errorMessage = e.Message;
+            }
         }
     }
 

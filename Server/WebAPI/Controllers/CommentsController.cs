@@ -2,19 +2,22 @@
 using RepositoryContracts;
 using DataTransferObjects;
 using Entities;
-namespace WebAPI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryContracts;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
-public class CommentsController:ControllerBase
+namespace WebAPI.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class CommentsController : ControllerBase
 {
     private readonly ICommentRepository commentRepository;
     private readonly IUserRepository userRepository;
     private readonly IPostRepository postRepository;
 
-    public CommentsController(ICommentRepository commentRepository, IUserRepository userRepository, IPostRepository postRepository)
+    public CommentsController(ICommentRepository commentRepository, IUserRepository userRepository,
+        IPostRepository postRepository)
     {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
@@ -24,34 +27,40 @@ public class CommentsController:ControllerBase
     [HttpPost]
     public async Task<IResult> CreateComment([FromBody] CreateCommentDto request)
     {
+        User? commenter = null;
+        Post? post = null;
         try
         {
-            User commenter = GetUserByName(request.Commenter);
             try
             {
-                Post post = postRepository.GetSinglePostAsync(request.PostId).Result;
+                commenter = GetUserByName(request.Commenter);
+                post = postRepository.GetSinglePostAsync(request.PostId).Result;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 return Results.NotFound(e.Message);
             }
-            
-            if (commenter == null)
+
+            Comment comment = new()
             {
-                return Results.NotFound("User does not exist");
-            }
-            else
+                CommentBody = request.CommentBody,
+                UserId = commenter.Id,
+                PostId = post.ID
+            };
+            Comment newComment = await commentRepository.AddCommentAsync(new Comment()
             {
-                Comment comment = new()
-                            {
-                                CommentBody = request.CommentBody,
-                                UserId = commenter.Id,
-                                PostId = request.PostId
-                            };
-                            Comment created = await commentRepository.AddCommentAsync(comment);
-                            return Results.Created($"/api/comments/{comment.Id}", created);
-            }
+                CommentBody = request.CommentBody,
+                UserId = commenter.Id,
+                PostId = request.PostId
+            });
+            CommentDTO created = new CommentDTO()
+            {
+                CommentId = newComment.Id,
+                CommentBody = newComment.CommentBody,
+                Commenter = userRepository.GetSingleUserAsync(newComment.UserId).Result.Name
+            };
+            return Results.Created($"/api/comments/{comment.Id}", created);
         }
         catch (Exception e)
         {
@@ -74,6 +83,7 @@ public class CommentsController:ControllerBase
             return Results.NotFound(e.Message);
         }
     }
+
     [HttpGet]
     public IResult GetMany([FromQuery] string? body, [FromQuery] int? userId, [FromQuery] int? postId)
     {
@@ -85,14 +95,17 @@ public class CommentsController:ControllerBase
             {
                 comments = comments.Where(c => c.CommentBody.ToLower().Contains(body.ToLower())).ToList();
             }
+
             if (userId.HasValue)
             {
                 comments = comments.Where(c => c.UserId == userId).ToList();
             }
+
             if (postId.HasValue)
             {
                 comments = comments.Where(c => c.PostId == postId).ToList();
             }
+
             return Results.Ok(comments);
         }
         catch (Exception e)
@@ -134,7 +147,7 @@ public class CommentsController:ControllerBase
             throw;
         }
     }
-    
+
     private User GetUserByName(string userName)
     {
         List<User> users = userRepository.GetManyUsersAsync().ToList();
@@ -145,6 +158,7 @@ public class CommentsController:ControllerBase
                 return user;
             }
         }
+
         return null;
     }
 }
