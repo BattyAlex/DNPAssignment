@@ -6,6 +6,11 @@ public class Post
     public string Title { get; set; }
     public string Content { get; set; }
     public int UserID { get; set; }
+
+    public User User { get; set; }
+
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
     public Post(string title, string content, int userId)
     {
         Title = title;
@@ -18,5 +23,8 @@ public class Post
         Title = title;
         Content = content;
     }
-    public Post(){}
+
+    public Post()
+    {
+    }
 }
