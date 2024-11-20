@@ -98,21 +98,17 @@ public class PostsController
         {
             queryForPost = queryForPost.Include(p => p.Comments);
         }
-        CreatePostDTO? dto = await queryForPost.Select(post => new CompletePostDTO()
+        CompletePostDTO? dto = await queryForPost.Select(post => new CompletePostDTO()
         {
             Id = post.ID, 
             Title = post.Title, 
             Content = post.Content, 
-            Author = includeAuthor ? new UserDTO
-            {
-                Id = post.User.Id,
-                Username = post.User.Name
-            } : null, 
+            Author = post.User.Name, 
             Comments = includeComments ? post.Comments.Select(c => new CommentDTO
             {
                 CommentId = c.Id,
                 CommentBody = c.CommentBody, 
-                Commenter = c.UserId
+                Commenter = c.User.Name
             }).ToList() : new ()
         }) .FirstOrDefaultAsync(); 
         return dto == null ? Results.NotFound() : Results.Ok(dto);

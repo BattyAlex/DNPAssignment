@@ -11,6 +11,6 @@ public class AppContext : DbContext
 
   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
   {
-    optionsBuilder.UseSqlite("Data Source=EfcRepositories.db");
+    optionsBuilder.UseSqlite("Data Source=C:\\Users\\Alexa\\OneDrive\\Dokumenter\\GitHub\\DNPAssignment\\.idea\\DNPAssignment\\Server\\EfcRepositories\\app.db");
   }
 }
