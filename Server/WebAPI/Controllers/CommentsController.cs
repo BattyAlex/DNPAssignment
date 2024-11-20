@@ -27,20 +27,10 @@ public class CommentsController : ControllerBase
     [HttpPost]
     public async Task<IResult> CreateComment([FromBody] CreateCommentDto request)
     {
-        User? commenter = null;
-        Post? post = null;
         try
         {
-            try
-            {
-                commenter = GetUserByName(request.Commenter);
-                post = postRepository.GetSinglePostAsync(request.PostId).Result;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return Results.NotFound(e.Message);
-            }
+            User commenter = GetUserByName(request.Commenter);
+            Post post = postRepository.GetSinglePostAsync(request.PostId).Result;
 
             Comment comment = new()
             {
@@ -48,17 +38,12 @@ public class CommentsController : ControllerBase
                 UserId = commenter.Id,
                 PostId = post.ID
             };
-            Comment newComment = await commentRepository.AddCommentAsync(new Comment()
-            {
-                CommentBody = request.CommentBody,
-                UserId = commenter.Id,
-                PostId = request.PostId
-            });
+            Comment newComment = await commentRepository.AddCommentAsync(comment);
             CommentDTO created = new CommentDTO()
             {
                 CommentId = newComment.Id,
                 CommentBody = newComment.CommentBody,
-                Commenter = userRepository.GetSingleUserAsync(newComment.UserId).Result.Name
+                Commenter = commenter.Name
             };
             return Results.Created($"/api/comments/{comment.Id}", created);
         }
