@@ -1,6 +1,7 @@
 ﻿using DataTransferObjects;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 
@@ -84,34 +85,37 @@ public class PostsController
     public async Task<IResult> GetSinglePost([FromRoute] int id,
         [FromQuery] bool includeAuthor, [FromQuery] bool includeComments)
     {
-        try
+        IQueryable<Post> queryForPost = postRepository 
+            .GetMultiplePosts() 
+            .Where(p => p.ID == id) 
+            .AsQueryable();
+        if (includeAuthor)
         {
-            Post post = await postRepository.GetSinglePostAsync(id);
-            CompletePostDTO result = new()
-            {
-                Title = post.Title,
-                Content = post.Content,
-                Id = post.ID
-            };
-            if (includeAuthor)
-            {
-                User author =
-                    await userRepository.GetSingleUserAsync(post.UserID);
-                result.Author = author.Name;
-            }
-
-            if (includeComments)
-            {
-                result.Comments = GetCommentsForPost(result.Id);
-            }
-
-            return Results.Ok(result);
+            queryForPost = queryForPost.Include(p => p.User);
         }
-        catch (Exception e)
+
+        if (includeComments)
         {
-            Console.WriteLine(e);
-            return Results.NotFound(e.Message);
+            queryForPost = queryForPost.Include(p => p.Comments);
         }
+        CreatePostDTO? dto = await queryForPost.Select(post => new CompletePostDTO()
+        {
+            Id = post.ID, 
+            Title = post.Title, 
+            Content = post.Content, 
+            Author = includeAuthor ? new UserDTO
+            {
+                Id = post.User.Id,
+                Username = post.User.Name
+            } : null, 
+            Comments = includeComments ? post.Comments.Select(c => new CommentDTO
+            {
+                CommentId = c.Id,
+                CommentBody = c.CommentBody, 
+                Commenter = c.UserId
+            }).ToList() : new ()
+        }) .FirstOrDefaultAsync(); 
+        return dto == null ? Results.NotFound() : Results.Ok(dto);
     }
 
     [HttpGet]

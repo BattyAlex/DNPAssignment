@@ -61,3 +61,9 @@ public class EfcUserRepository : IUserRepository
         return ctx.Users.AsQueryable();
     }
 }
+
+public class NotFoundException : Exception
+{
+    public NotFoundException(string message) : base(message){}
+   
+}

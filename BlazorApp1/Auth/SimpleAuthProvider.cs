@@ -74,8 +74,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider
         {
             new Claim(ClaimTypes.Name, userDto.Username), new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
         };
-        ClaimsIdentity identity = new ClaimsIdentity(claims, "apiauth");
-        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
+        ClaimsIdentity identity = new ClaimsIdentity(claims, "apiauth");ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
         return new AuthenticationState(claimsPrincipal);
 
     }

@@ -2,6 +2,7 @@
 using Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -100,28 +101,13 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public IResult GetManyUsers([FromQuery] int id, [FromQuery] string? nameContains)
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers([FromQuery] string? userNameContains = null)
     {
-        try
-        {
-            List<User> users = userRepo.GetManyUsersAsync().ToList();
-            if (!string.IsNullOrEmpty(nameContains))
-            {
-                users = users.Where(u => u.Name.Contains(nameContains)).ToList();
-            }
-
-            IEnumerable<UserDTO> userDtos = users.Select(user => new UserDTO
-            {
-                    Username = user.Name,
-                    Id = user.Id
-            });
-            return Results.Ok(userDtos);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        IList<User> users = await userRepo.GetManyUsersAsync()
+            .Where(u => userNameContains == null ||
+                        u.Name.ToLower().Contains(userNameContains.ToLower())
+            ).ToListAsync();
+        return Ok(users);
     }
 
     private bool VerifyUserNameAvailable(String userName)
